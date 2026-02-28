@@ -9,6 +9,11 @@ use App\Models\Medis;
 use App\Models\Atlet;
 use App\Models\KlasifikasiDisabilitas;
 use App\Models\JenisDisabilitas;
+use App\Models\TrainingType;
+
+use App\Models\CekKesehatan;
+use App\Models\MonitoringLatihan;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -21,6 +26,7 @@ class DashboardController extends Controller
         $totalAtlet   = Atlet::where('is_active', 1)->count();
         $totalKlasifikasi = KlasifikasiDisabilitas::where('is_active', 1)->count();
         $totalJenis   = JenisDisabilitas::where('is_active', 1)->count();
+        $totalTrainingType = TrainingType::where('is_active', 1)->count();
 
         // Atlet per Cabor (for bar chart)
         $atletPerCabor = Cabor::withCount(['atlets' => function ($q) {
@@ -54,6 +60,34 @@ class DashboardController extends Controller
             ['name' => 'Masseur', 'count' => Medis::where('is_active', 1)->where('klasifikasi', 'masseur')->count()],
         ];
 
+        // Training Type per Cabor
+        $trainingTypePerCabor = Cabor::withCount(['trainingTypes' => function ($q) {
+            $q->where('is_active', 1);
+        }])->where('is_active', 1)->get()->map(function ($c) {
+            return ['name' => $c->name, 'count' => $c->training_types_count];
+        })->values();
+
+        // ===== Recent Monitoring Data (Role Based) =====
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $isAtlet = $user->hasRole('atlet');
+        $isPelatih = $user->hasRole('pelatih');
+
+        $healthQuery = CekKesehatan::with(['atlet', 'coach', 'cabor'])->where('is_active', 1)->latest();
+        $monitoringQuery = MonitoringLatihan::with(['atlet', 'coach', 'cabor'])->where('is_active', 1)->latest();
+
+        if ($isAtlet) {
+            $healthQuery->where('person_type', 'atlet')->where('person_id', $user->atlet?->id);
+            $monitoringQuery->where('person_type', 'atlet')->where('person_id', $user->atlet?->id);
+        } elseif ($isPelatih) {
+            $caborId = $user->coach?->cabor_id;
+            $healthQuery->where('cabor_id', $caborId);
+            $monitoringQuery->where('cabor_id', $caborId);
+        }
+
+        $recentHealth = $healthQuery->limit(10)->get();
+        $recentMonitoring = $monitoringQuery->limit(10)->get();
+
         $title = 'Dashboard';
         $breadcrum = ['Dashboard', 'Statistik Overview'];
 
@@ -64,12 +98,17 @@ class DashboardController extends Controller
             'totalAtlet',
             'totalKlasifikasi',
             'totalJenis',
+            'totalTrainingType',
+            'totalTrainingType',
             'atletPerCabor',
             'atletPerKlasifikasi',
             'atletLaki',
             'atletWanita',
             'coachPerCabor',
             'medisByType',
+            'trainingTypePerCabor',
+            'recentHealth',
+            'recentMonitoring',
             'title',
             'breadcrum'
         ));

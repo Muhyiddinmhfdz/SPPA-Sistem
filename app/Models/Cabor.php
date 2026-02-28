@@ -36,4 +36,9 @@ class Cabor extends Model
     {
         return $this->hasMany(Coach::class);
     }
+
+    public function trainingTypes()
+    {
+        return $this->hasMany(TrainingType::class);
+    }
 }

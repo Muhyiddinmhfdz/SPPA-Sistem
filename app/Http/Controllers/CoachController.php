@@ -37,7 +37,8 @@ class CoachController extends Controller
         }
 
         $cabors = Cabor::all();
-        return view('pages.coach.index', compact('cabors'));
+        return view('pages.coach.index', compact('cabors'))
+            ->with(['title' => 'Data Pelatih', 'breadcrum' => ['Master Data', 'Data Pelatih']]);
     }
 
     public function store(Request $request)

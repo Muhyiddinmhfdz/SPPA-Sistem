@@ -55,7 +55,8 @@ class AtletController extends Controller
 
         $cabors = Cabor::orderBy('name', 'asc')->get();
         $klasifikasis = KlasifikasiDisabilitas::orderBy('kode_klasifikasi', 'asc')->get();
-        return view('pages.atlet.index', compact('cabors', 'klasifikasis'));
+        return view('pages.atlet.index', compact('cabors', 'klasifikasis'))
+            ->with(['title' => 'Data Atlet', 'breadcrum' => ['Master Data', 'Data Atlet']]);
     }
 
     /**

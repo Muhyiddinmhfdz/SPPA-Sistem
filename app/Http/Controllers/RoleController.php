@@ -28,7 +28,7 @@ class RoleController extends Controller
                 ->make(true);
         }
 
-        return view('pages.role.index', ['title' => 'Manajemen Role', 'breadcrum' => ['Pengaturan', 'Manajemen Role']]);
+        return view('pages.role.index', ['title' => 'Data Role', 'breadcrum' => ['Master Data', 'Data Role']]);
     }
 
     public function store(Request $request)

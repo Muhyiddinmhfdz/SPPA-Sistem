@@ -14,6 +14,7 @@ use App\Http\Controllers\CekKesehatanController;
 use App\Http\Controllers\RiwayatKesehatanController;
 use App\Http\Controllers\MonitoringLatihanController;
 use App\Http\Controllers\RiwayatLatihanController;
+use App\Http\Controllers\TrainingTypeController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -52,6 +53,12 @@ Route::name('master.')->middleware('auth')->prefix('master')->group(function () 
 
     // Jenis Disabilitas Routes
     Route::resource('jenis-disabilitas', JenisDisabilitasController::class)->except(['create', 'show']);
+
+    // Training Type Routes
+    Route::resource('training-type', TrainingTypeController::class)->except(['create', 'show']);
+    Route::get('training-type/components/{typeId}', [TrainingTypeController::class, 'getComponents'])->name('training-type.get-components');
+    Route::post('training-type/component-store', [TrainingTypeController::class, 'storeComponent'])->name('training-type.store-component');
+    Route::delete('training-type/component-delete/{id}', [TrainingTypeController::class, 'destroyComponent'])->name('training-type.delete-component');
 });
 
 // ── Cek Kesehatan ─────────────────────────────────────────────────────────────

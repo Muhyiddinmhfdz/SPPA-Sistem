@@ -28,7 +28,8 @@ class KlasifikasiDisabilitasController extends Controller
                 ->make(true);
         }
 
-        return view('pages.klasifikasi_disabilitas.index');
+        return view('pages.klasifikasi_disabilitas.index')
+            ->with(['title' => 'Klasifikasi Disabilitas', 'breadcrum' => ['Master Data', 'Klasifikasi Disabilitas']]);
     }
 
     public function store(Request $request)

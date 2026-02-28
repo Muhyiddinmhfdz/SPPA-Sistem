@@ -40,7 +40,7 @@ class UserController extends Controller
         }
 
         $roles = Role::all();
-        return view('pages.user.index', compact('roles'))->with(['title' => 'Manajemen User', 'breadcrum' => ['Pengaturan', 'Manajemen User']]);
+        return view('pages.user.index', compact('roles'))->with(['title' => 'Data User', 'breadcrum' => ['Master Data', 'Data User']]);
     }
 
     public function store(Request $request)

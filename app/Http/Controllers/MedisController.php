@@ -42,7 +42,8 @@ class MedisController extends Controller
                 ->make(true);
         }
 
-        return view('pages.medis.index');
+        return view('pages.medis.index')
+            ->with(['title' => 'Data Medis', 'breadcrum' => ['Master Data', 'Data Medis']]);
     }
 
     public function store(Request $request)

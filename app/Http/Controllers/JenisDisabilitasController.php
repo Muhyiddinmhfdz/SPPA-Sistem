@@ -43,7 +43,8 @@ class JenisDisabilitasController extends Controller
         }
 
         $klasifikasis = KlasifikasiDisabilitas::orderBy('kode_klasifikasi', 'asc')->get();
-        return view('pages.jenis_disabilitas.index', compact('klasifikasis'));
+        return view('pages.jenis_disabilitas.index', compact('klasifikasis'))
+            ->with(['title' => 'Data Jenis Disabilitas', 'breadcrum' => ['Master Data', 'Jenis Disabilitas']]);
     }
 
     /**
