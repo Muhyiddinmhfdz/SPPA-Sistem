@@ -241,6 +241,60 @@
                                         </div>
                                     </div>
 
+                                    {{-- CEK KESEHATAN ACCORDION --}}
+                                    <div class="menu-item pt-5">
+                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Monitoring</span></div>
+                                    </div>
+
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('cek-kesehatan.*') || request()->routeIs('riwayat-kesehatan.*') ? 'here show' : '' }}">
+                                        <span class="menu-link">
+                                            <span class="menu-icon">
+                                                <i class="ki-duotone ki-heart fs-2"><span class="path1"></span><span class="path2"></span></i>
+                                            </span>
+                                            <span class="menu-title">Kesehatan</span>
+                                            <span class="menu-arrow"></span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('cek-kesehatan.*') || request()->routeIs('riwayat-kesehatan.*') ? 'show' : '' }}">
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('cek-kesehatan.*') ? 'active' : '' }}" href="{{ route('cek-kesehatan.index') }}">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Test Kesehatan</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('riwayat-kesehatan.*') ? 'active' : '' }}" href="{{ route('riwayat-kesehatan.index') }}">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Riwayat Kesehatan</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- LATIHAN ACCORDION --}}
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('monitoring-latihan.*') || request()->routeIs('riwayat-latihan.*') ? 'here show' : '' }}">
+                                        <span class="menu-link">
+                                            <span class="menu-icon">
+                                                <i class="ki-duotone ki-barbell fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span></i>
+                                            </span>
+                                            <span class="menu-title">Monitoring Latihan</span>
+                                            <span class="menu-arrow"></span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('monitoring-latihan.*') || request()->routeIs('riwayat-latihan.*') ? 'show' : '' }}">
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('monitoring-latihan.*') ? 'active' : '' }}" href="{{ route('monitoring-latihan.index') }}">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Input Monitoring</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('riwayat-latihan.*') ? 'active' : '' }}" href="{{ route('riwayat-latihan.index') }}">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Riwayat Latihan</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="menu-item pt-5">
                                         <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Pengaturan</span></div>
                                     </div>

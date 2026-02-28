@@ -27,8 +27,13 @@ class Cabor extends Model
         'is_active',
     ];
 
-    public function pelatihans()
+    public function atlets()
     {
-        return $this->hasMany(Pelatihan::class);
+        return $this->hasMany(Atlet::class);
+    }
+
+    public function coaches()
+    {
+        return $this->hasMany(Coach::class);
     }
 }

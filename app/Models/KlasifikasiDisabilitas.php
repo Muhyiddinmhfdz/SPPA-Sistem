@@ -16,6 +16,11 @@ class KlasifikasiDisabilitas extends Model
         'is_active',
     ];
 
+    public function atlets()
+    {
+        return $this->hasMany(Atlet::class, 'klasifikasi_disabilitas_id');
+    }
+
     public function jenis_disabilitas()
     {
         return $this->hasMany(JenisDisabilitas::class);

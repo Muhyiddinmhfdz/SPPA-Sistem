@@ -46,4 +46,16 @@ class Atlet extends Model
     {
         return $this->belongsTo(KlasifikasiDisabilitas::class);
     }
+
+    public function cekKesehatan()
+    {
+        return $this->hasMany(CekKesehatan::class, 'person_id')
+            ->where('person_type', 'atlet');
+    }
+
+    public function monitoringLatihan()
+    {
+        return $this->hasMany(MonitoringLatihan::class, 'person_id')
+            ->where('person_type', 'atlet');
+    }
 }

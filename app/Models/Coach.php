@@ -38,4 +38,16 @@ class Coach extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function cekKesehatan()
+    {
+        return $this->hasMany(CekKesehatan::class, 'person_id')
+            ->where('person_type', 'pelatih');
+    }
+
+    public function monitoringLatihan()
+    {
+        return $this->hasMany(MonitoringLatihan::class, 'person_id')
+            ->where('person_type', 'pelatih');
+    }
 }
