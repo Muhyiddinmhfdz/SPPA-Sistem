@@ -189,6 +189,7 @@
                                 <div class="invalid-feedback" id="sk_fileError"></div>
                                 <div class="text-muted fs-7 mt-2">Format yang diizinkan: <b class="text-primary">PDF, JPG, JPEG, PNG</b>. Maksimal ukuran: <b class="text-primary">5MB</b>.</div>
                                 <div class="text-warning fs-7 mt-2" id="sk_fileHint" style="display: none;"><i class="ki-duotone ki-information-5 text-warning fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> Biarkan kosong jika Anda tidak ingin mengganti file SK sebelumnya.</div>
+                                <div class="mt-1" id="sk_file_viewer"></div>
                             </div>
                         </div>
                     </div>
@@ -214,6 +215,7 @@
         caborIndex: "{{ route('master.cabor.index') }}",
         caborStore: "{{ route('master.cabor.store') }}"
     };
+    window.baseUrl = "{{ url('/') }}";
 </script>
 <script src="{{ asset('js/pages/master/cabor.js') }}"></script>
 @endsection

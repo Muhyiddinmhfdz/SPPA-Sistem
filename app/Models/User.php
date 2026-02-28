@@ -33,7 +33,6 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
             'is_active' => 'boolean',
         ];
     }
@@ -52,7 +51,7 @@ class User extends Authenticatable
         return LogOptions::defaults()
             ->logOnly(['name', 'username', 'email', 'is_active'])
             ->logOnlyDirty()
-            ->setDescriptionForEvent(fn (string $eventName) => "User {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "User {$eventName}")
             ->useLogName('user');
     }
 
@@ -87,5 +86,20 @@ class User extends Authenticatable
         }
 
         return Str::upper(Str::limit($initials, 2, ''));
+    }
+
+    public function coach()
+    {
+        return $this->hasOne(Coach::class);
+    }
+
+    public function medis()
+    {
+        return $this->hasOne(Medis::class);
+    }
+
+    public function atlet()
+    {
+        return $this->hasOne(Atlet::class);
     }
 }

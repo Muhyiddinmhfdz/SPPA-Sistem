@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cabor extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'sk_start_date',
@@ -21,5 +24,11 @@ class Cabor extends Model
         'active_coaches_count',
         'active_medics_count',
         'sk_file_path',
+        'is_active',
     ];
+
+    public function pelatihans()
+    {
+        return $this->hasMany(Pelatihan::class);
+    }
 }

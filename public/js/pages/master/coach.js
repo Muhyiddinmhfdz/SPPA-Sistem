@@ -1,13 +1,13 @@
 "use strict";
 
-var KTCaborController = function () {
+var KTCoachController = function () {
     var table;
 
     var initDatatable = function () {
-        table = $('#table_cabor').DataTable({
+        table = $('#table_pelatihan').DataTable({
             processing: true,
             serverSide: true,
-            ajax: window.routes.caborIndex,
+            ajax: window.routes.coachIndex,
             columns: [
                 {
                     data: 'DT_RowIndex',
@@ -21,18 +21,16 @@ var KTCaborController = function () {
                     name: 'name'
                 },
                 {
-                    data: 'chairman_name',
-                    name: 'chairman_name'
+                    data: 'cabor_name',
+                    name: 'cabor_name'
                 },
                 {
-                    data: 'phone_number',
-                    name: 'phone_number'
+                    data: 'nik',
+                    name: 'nik'
                 },
                 {
-                    data: 'file_sk',
-                    name: 'file_sk',
-                    orderable: false,
-                    searchable: false
+                    data: 'gender',
+                    name: 'gender'
                 },
                 {
                     data: 'action',
@@ -64,13 +62,10 @@ var KTCaborController = function () {
     }
 
     var initFormActions = function () {
-        // Init Flatpickr
-        $("#sk_start_date").flatpickr({
-            dateFormat: "Y-m-d",
-        });
 
-        $("#sk_end_date").flatpickr({
+        $("#birth_date").flatpickr({
             dateFormat: "Y-m-d",
+            maxDate: "today"
         });
 
         var fetchFileLink = function (path, title) {
@@ -80,55 +75,89 @@ var KTCaborController = function () {
         }
 
         // Add Modal
-        $('#btnTambahCabor').click(function () {
-            $('#formCabor').trigger("reset");
-            $('#cabor_id').val('');
-            $('#modalTitle').text('Tambah Cabang Olahraga');
-            $('#sk_fileHint').hide();
-            $('#sk_file_viewer').html('');
-            $('#sk_start_date').val('').trigger('change');
-            $('#sk_end_date').val('').trigger('change');
+        $('#btnTambahPelatih').click(function () {
+            $('#formCoach').trigger("reset");
+            $('#coach_id').val('');
+            $('#cabor_id').val('').trigger('change');
+            $('#religion').val('').trigger('change');
+            $('#gender').val('').trigger('change');
+            $('#blood_type').val('').trigger('change');
+            $('#username').val('');
+            $('#password').val('');
+            $('#modalTitle').text('Tambah Data Pelatih');
+
+            // hide all document hints
+            $('.document_hint').hide();
+
+            $('[id$="_viewer"]').html('');
+
+            $('.nav-tabs a[href="#kt_tab_akun_pribadi"]').tab('show'); // Reset to first tab
+
             $('.invalid-feedback').text('');
-            $('.form-control').removeClass('is-invalid');
+            $('.form-control, .form-select').removeClass('is-invalid');
         });
 
         // Edit Modal
-        $('body').on('click', '.editCabor', function () {
+        $('body').on('click', '.editCoach', function () {
             var id = $(this).data('id');
-            $.get(window.routes.caborIndex + '/' + id + '/edit', function (data) {
-                $('#modalTitle').text('Edit Cabang Olahraga');
-                $('#cabor_id').val(data.id);
-                $('#name').val(data.name);
-                $('#sk_start_date').val(data.sk_start_date);
-                $('#sk_end_date').val(data.sk_end_date);
-                $('#chairman_name').val(data.chairman_name);
-                $('#secretary_name').val(data.secretary_name);
-                $('#treasurer_name').val(data.treasurer_name);
-                $('#secretariat_address').val(data.secretariat_address);
-                $('#phone_number').val(data.phone_number);
-                $('#email').val(data.email);
-                $('#npwp').val(data.npwp);
-                $('#active_athletes_count').val(data.active_athletes_count);
-                $('#active_coaches_count').val(data.active_coaches_count);
-                $('#active_medics_count').val(data.active_medics_count);
+            $.get(window.routes.coachIndex + '/' + id + '/edit', function (data) {
+                $('#modalTitle').text('Edit Data Pelatih');
+                $('#coach_id').val(data.id);
 
-                $('#sk_file').val('');
-                $('#sk_fileHint').show();
-                $('#sk_file_viewer').html(fetchFileLink(data.file_sk, 'SK Kepengurusan'));
+                $('#cabor_id').val(data.cabor_id).trigger('change');
+                $('#name').val(data.name);
+                $('#nik').val(data.nik);
+
+                // Get username from associated User relation (if handled by eloquent loaded in edit method, but wait:
+                // controller's edit method currently returns $pelatihan directly. Let's assume user is not eager loaded, but we need the username.)
+                // Since user might not be eager loaded, we should load it. Wait, the controller wasn't modified to load it.
+                // Wait! No, there is $data.user that we can fetch.
+                if (data.user) {
+                    $('#username').val(data.user.username);
+                } else {
+                    $('#username').val('');
+                }
+                $('#password').val('');
+
+                $('#birth_place').val(data.birth_place);
+                $('#birth_date').val(data.birth_date);
+                $('#religion').val(data.religion).trigger('change');
+                $('#gender').val(data.gender).trigger('change');
+                $('#address').val(data.address);
+                $('#blood_type').val(data.blood_type).trigger('change');
+                $('#last_education').val(data.last_education);
+
+                // clear the file input text
+                $('#photo').val('');
+                $('#ktp').val('');
+                $('#certificate').val('');
+                $('#npwp').val('');
+                $('#sk').val('');
+
+                // Viewers
+                $('#photo_viewer').html(fetchFileLink(data.photo_path, 'Pas Foto'));
+                $('#ktp_viewer').html(fetchFileLink(data.ktp_path, 'KTP'));
+                $('#certificate_viewer').html(fetchFileLink(data.certificate_path, 'Sertifikat Pddkn/Lisensi'));
+                $('#npwp_viewer').html(fetchFileLink(data.npwp_path, 'NPWP'));
+                $('#sk_viewer').html(fetchFileLink(data.sk_path, 'SK Pengangkatan'));
+
+                $('.document_hint').show();
+
+                $('.nav-tabs a[href="#kt_tab_akun_pribadi"]').tab('show'); // Reset to first tab
 
                 $('.invalid-feedback').text('');
-                $('.form-control').removeClass('is-invalid');
-                $('#kt_modal_cabor').modal('show');
+                $('.form-control, .form-select').removeClass('is-invalid');
+                $('#kt_modal_coach').modal('show');
             }).fail(function (err) {
                 Swal.fire('Error', 'Gagal mengambil data', 'error');
             });
         });
 
         // Submit Form
-        $('#formCabor').submit(function (e) {
+        $('#formCoach').submit(function (e) {
             e.preventDefault();
-            var id = $('#cabor_id').val();
-            var url = id ? window.routes.caborIndex + "/" + id : window.routes.caborStore;
+            var id = $('#coach_id').val();
+            var url = id ? window.routes.coachIndex + "/" + id : window.routes.coachStore;
 
             var formData = new FormData(this);
             if (id) {
@@ -140,13 +169,13 @@ var KTCaborController = function () {
             btn.disabled = true;
 
             $.ajax({
-                type: 'POST', // always POST for FormData, with _method=PUT overrides
+                type: 'POST',
                 url: url,
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    $('#kt_modal_cabor').modal('hide');
+                    $('#kt_modal_coach').modal('hide');
                     table.draw();
                     Swal.fire({
                         text: data.success,
@@ -160,14 +189,19 @@ var KTCaborController = function () {
                 },
                 error: function (data) {
                     $('.invalid-feedback').text('');
-                    $('.form-control').removeClass('is-invalid');
+                    $('.form-control, .form-select').removeClass('is-invalid');
                     if (data.status === 422) {
+                        $('.nav-tabs a[href="#kt_tab_akun_pribadi"]').tab('show');
                         var errors = data.responseJSON.error;
                         if (typeof errors === 'string') {
                             Swal.fire('Error', errors, 'error');
                         } else {
                             $.each(errors, function (key, value) {
-                                $('#' + key).addClass('is-invalid');
+                                if ($('#' + key).hasClass('form-select')) {
+                                    $('#' + key).next('.select2-container').addClass('is-invalid');
+                                } else {
+                                    $('#' + key).addClass('is-invalid');
+                                }
                                 $('#' + key + 'Error').text(value).show();
                             });
                         }
@@ -185,10 +219,10 @@ var KTCaborController = function () {
         });
 
         // Delete
-        $('body').on('click', '.deleteCabor', function () {
+        $('body').on('click', '.deleteCoach', function () {
             var id = $(this).data("id");
             Swal.fire({
-                text: "Anda yakin ingin menghapus data cabang olahraga ini?",
+                text: "Anda yakin ingin menghapus data pelatih ini?",
                 icon: "warning",
                 showCancelButton: true,
                 buttonsStyling: false,
@@ -202,7 +236,7 @@ var KTCaborController = function () {
                 if (result.value) {
                     $.ajax({
                         type: "DELETE",
-                        url: window.routes.caborIndex + "/" + id,
+                        url: window.routes.coachIndex + "/" + id,
                         data: {
                             _token: csrf_token
                         },
@@ -236,5 +270,5 @@ var KTCaborController = function () {
 }();
 
 $(document).ready(function () {
-    KTCaborController.init();
+    KTCoachController.init();
 });

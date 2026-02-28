@@ -17,7 +17,9 @@ class RoleSeeder extends Seeder
         $roles = [
             'Super Admin',
             'Admin',
-            'Staff',
+            'Pelatih',
+            'Medis',
+            'Atlet',
         ];
 
         foreach ($roles as $roleName) {

@@ -136,12 +136,9 @@ class CaborController extends Controller
             return response()->json(['error' => 'Data tidak ditemukan.'], 404);
         }
 
-        if ($cabor->sk_file_path && file_exists(public_path($cabor->sk_file_path))) {
-            unlink(public_path($cabor->sk_file_path));
-        }
+        $cabor->update(['is_active' => 0]);
+        $cabor->delete(); // soft delete
 
-        $cabor->delete();
-
-        return response()->json(['success' => 'Cabang Olahraga berhasil dihapus.']);
+        return response()->json(['success' => 'Cabang Olahraga berhasil dinonaktifkan.']);
     }
 }

@@ -27,6 +27,8 @@ return new class extends Migration
             $table->integer('active_coaches_count')->nullable();
             $table->integer('active_medics_count')->nullable();
             $table->string('sk_file_path')->nullable();
+            $table->tinyInteger('is_active')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

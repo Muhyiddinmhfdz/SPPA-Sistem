@@ -35,9 +35,23 @@ class CaborSeeder extends Seeder
             'Tenis Kursi Roda (WT)'
         ];
 
+        $faker = \Faker\Factory::create('id_ID');
+
         foreach ($cabors as $cabor) {
             Cabor::create([
-                'name' => $cabor
+                'name' => $cabor,
+                'sk_start_date' => $faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d'),
+                'sk_end_date' => $faker->dateTimeBetween('now', '+3 years')->format('Y-m-d'),
+                'chairman_name' => $faker->name,
+                'secretary_name' => $faker->name,
+                'treasurer_name' => $faker->name,
+                'secretariat_address' => $faker->address,
+                'phone_number' => $faker->phoneNumber,
+                'email' => $faker->safeEmail,
+                'npwp' => $faker->numerify('##.###.###.#-###.###'),
+                'active_athletes_count' => $faker->numberBetween(5, 50),
+                'active_coaches_count' => $faker->numberBetween(1, 10),
+                'active_medics_count' => $faker->numberBetween(0, 5),
             ]);
         }
     }

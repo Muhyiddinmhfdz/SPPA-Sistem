@@ -5,6 +5,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CaborController;
+use App\Http\Controllers\CoachController;
+use App\Http\Controllers\KlasifikasiDisabilitasController;
+use App\Http\Controllers\MedisController;
+use App\Http\Controllers\AtletController;
+use App\Http\Controllers\JenisDisabilitasController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -28,4 +33,19 @@ Route::name('master.')->middleware('auth')->prefix('master')->group(function () 
 
     // Cabor Management Routes
     Route::resource('cabor', CaborController::class)->except(['create', 'show']);
+
+    // Coach Management Routes
+    Route::resource('coach', CoachController::class)->except(['create', 'show']);
+
+    // Klasifikasi Disabilitas Routes
+    Route::resource('klasifikasi-disabilitas', KlasifikasiDisabilitasController::class)->except(['create', 'show']);
+
+    // Medis Routes
+    Route::resource('medis', MedisController::class)->except(['create', 'show']);
+
+    // Atlet Routes
+    Route::resource('atlet', AtletController::class)->except(['create', 'show']);
+
+    // Jenis Disabilitas Routes
+    Route::resource('jenis-disabilitas', JenisDisabilitasController::class)->except(['create', 'show']);
 });

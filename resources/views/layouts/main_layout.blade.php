@@ -130,8 +130,8 @@
                 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
                     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
                         <a href="{{ route('dashboard') }}">
-                            <img alt="Logo" src="{{ asset('assets/media/logos/default.svg') }}" class="h-30px app-sidebar-logo-default" style="filter: brightness(0) invert(1);" />
-                            <img alt="Logo" src="{{ asset('assets/media/logos/default-small.svg') }}" class="h-20px app-sidebar-logo-minimize" style="filter: brightness(0) invert(1);" />
+                            <img alt="Logo" src="{{ asset('assets/logos_sistem.png') }}" class="h-45px w-200px app-sidebar-logo-default" style="filter: brightness(0) invert(1);" />
+                            <img alt="Logo" src="{{ asset('assets/logos_sistem.png') }}" class="h-20px app-sidebar-logo-minimize" style="filter: brightness(0) invert(1);" />
                         </a>
                         <div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize">
                             <i class="ki-duotone ki-black-left-line fs-3 rotate-180">
@@ -154,32 +154,88 @@
                                     </div>
 
                                     <div class="menu-item pt-5">
-                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Master Data</span></div>
+                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Sistem & Pengguna</span></div>
                                     </div>
 
-                                    <div class="menu-item menu-accordion {{ request()->routeIs('master.user.*') || request()->routeIs('master.role.*') || request()->routeIs('master.cabor.*') ? 'here show' : '' }}" data-kt-menu-trigger="click">
+                                    <div class="menu-item menu-accordion {{ request()->routeIs('master.user.*') || request()->routeIs('master.role.*') ? 'here show' : '' }}" data-kt-menu-trigger="click">
                                         <span class="menu-link">
-                                            <span class="menu-icon"><i class="ki-duotone ki-folder fs-2"><span class="path1"></span><span class="path2"></span></i></span>
-                                            <span class="menu-title">Master Data</span>
+                                            <span class="menu-icon"><i class="ki-duotone ki-setting-2 fs-2"><span class="path1"></span><span class="path2"></span></i></span>
+                                            <span class="menu-title">Manajemen User</span>
                                             <span class="menu-arrow"></span>
                                         </span>
-                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('master.user.*') || request()->routeIs('master.role.*') || request()->routeIs('master.cabor.*') ? 'show' : '' }}">
+                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('master.user.*') || request()->routeIs('master.role.*') ? 'show' : '' }}">
                                             <div class="menu-item">
                                                 <a href="{{ route('master.user.index') }}" class="menu-link {{ request()->routeIs('master.user.*') ? 'active' : '' }}">
                                                     <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                                    <span class="menu-title">Manajemen User</span>
+                                                    <span class="menu-title">Data User</span>
                                                 </a>
                                             </div>
                                             <div class="menu-item">
                                                 <a href="{{ route('master.role.index') }}" class="menu-link {{ request()->routeIs('master.role.*') ? 'active' : '' }}">
                                                     <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                                    <span class="menu-title">Manajemen Role</span>
+                                                    <span class="menu-title">Data Role</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="menu-item pt-5">
+                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Master Data</span></div>
+                                    </div>
+
+                                    <div class="menu-item menu-accordion {{ request()->routeIs('master.cabor.*') || request()->routeIs('master.klasifikasi-disabilitas.*') || request()->routeIs('master.coach.*') ? 'here show' : '' }}" data-kt-menu-trigger="click">
+                                        <span class="menu-link">
+                                            <span class="menu-icon"><i class="ki-duotone ki-folder fs-2"><span class="path1"></span><span class="path2"></span></i></span>
+                                            <span class="menu-title">Master Data</span>
+                                            <span class="menu-arrow"></span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('master.cabor.*') || request()->routeIs('master.klasifikasi-disabilitas.*') || request()->routeIs('master.jenis-disabilitas.*') || request()->routeIs('master.coach.*') || request()->routeIs('master.medis.*') || request()->routeIs('master.atlet.*') ? 'show' : '' }}">
+                                            <div class="menu-item">
+                                                <a href="{{ route('master.cabor.index') }}" class="menu-link {{ request()->routeIs('master.cabor.*') ? 'active' : '' }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Data Cabor</span>
                                                 </a>
                                             </div>
                                             <div class="menu-item">
-                                                <a href="{{ route('master.cabor.index') }}" class="menu-link {{ request()->routeIs('master.cabor.*') ? 'active' : '' }}">
-                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                                    <span class="menu-title">Cabang Olahraga</span>
+                                                <a class="menu-link {{ request()->routeIs('master.klasifikasi-disabilitas.*') ? 'active' : '' }}" href="{{ route('master.klasifikasi-disabilitas.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Klasifikasi Disabilitas</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('master.jenis-disabilitas.*') ? 'active' : '' }}" href="{{ route('master.jenis-disabilitas.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Data Jenis Disabilitas</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('master.coach.*') ? 'active' : '' }}" href="{{ route('master.coach.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Data Pelatih</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('master.medis.*') ? 'active' : '' }}" href="{{ route('master.medis.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Data Medis</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('master.atlet.*') ? 'active' : '' }}" href="{{ route('master.atlet.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Data Atlet</span>
                                                 </a>
                                             </div>
                                         </div>

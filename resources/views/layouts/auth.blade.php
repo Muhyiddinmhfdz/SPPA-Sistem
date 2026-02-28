@@ -76,9 +76,9 @@
             <div class="d-flex flex-column flex-lg-row-fluid flex-center w-lg-50 px-10 py-10" style="background-color: #1e1e2d; position: relative; z-index: 1;">
 
                 <div class="d-flex flex-column flex-center text-center mb-8">
-                    <a href="#" class="mb-4 d-inline-block">
+                    <!-- <a href="#" class="mb-4 d-inline-block">
                         <img alt="Logo" src="{{ asset('assets/media/logos/default.svg') }}" class="h-60px h-lg-80px" style="filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0,0,0,0.3));">
-                    </a>
+                    </a> -->
                     <h1 class="text-white fw-bold fs-2x mb-1 mt-3" style="letter-spacing: 0.5px;">SISTEM PEMBINAAN PRESTASI</h1>
                     <div class="npci-text-gradient fs-5 fw-semibold">
                         NATIONAL PARALYMPIC COMMITTEE INDONESIA

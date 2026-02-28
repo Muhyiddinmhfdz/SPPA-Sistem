@@ -36,9 +36,9 @@
             <div class="fv-row mb-6">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <label class="form-label fs-6 fw-bold text-dark mb-0">Password</label>
-                    @if (Route::has('password.request'))
+                    <!-- @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="link-primary fs-7 fw-bold" style="transition: color 0.2s;">Lupa Password?</a>
-                    @endif
+                    @endif -->
                 </div>
                 <div class="position-relative">
                     <span class="position-absolute top-50 translate-middle-y ms-4">
@@ -79,15 +79,6 @@
                     </span>
                 </button>
             </div>
-
-            @if (Route::has('register'))
-            <div class="text-center">
-                <p class="text-gray-500 fs-6 fw-medium mb-0">
-                    Belum memiliki akun?
-                    <a href="{{ route('register') }}" class="link-primary fw-bolder">Daftar Sekarang</a>
-                </p>
-            </div>
-            @endif
         </form>
     </div>
 </div>
