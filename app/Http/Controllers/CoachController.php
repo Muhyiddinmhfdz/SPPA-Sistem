@@ -17,8 +17,13 @@ class CoachController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Coach::with('cabor')->latest()->get();
-            return DataTables::of($data)
+            $data = Coach::with('cabor')->latest();
+
+            if ($request->filled('cabor_id')) {
+                $data->where('cabor_id', $request->cabor_id);
+            }
+
+            return DataTables::of($data->get())
                 ->addIndexColumn()
                 ->addColumn('cabor_name', function ($row) {
                     return $row->cabor ? $row->cabor->name : '-';

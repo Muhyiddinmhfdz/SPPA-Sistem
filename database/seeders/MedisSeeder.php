@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Medis;
 use Illuminate\Support\Facades\Hash;
+use Faker\Factory as Faker;
 
 class MedisSeeder extends Seeder
 {
@@ -15,54 +15,54 @@ class MedisSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create User for Medis - Dokter
-        $userDokter = User::create([
-            'name' => 'Dr. Andi Santoso',
-            'username' => 'dokter',
-            'email' => 'dokter@npci.or.id',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-        ]);
-        $userDokter->assignRole('Medis');
+        $faker = Faker::create('id_ID');
 
-        Medis::create([
-            'user_id' => $userDokter->id,
-            'name' => 'Dr. Andi Santoso',
-            'klasifikasi' => 'dokter',
-            'nik' => '3201222222222222',
-            'birth_place' => 'Bandung',
-            'birth_date' => '1985-05-10',
-            'religion' => 'Islam',
-            'gender' => 'L',
-            'address' => 'Jl. Kesehatan No. 1, Bandung',
-            'blood_type' => 'AB',
-            'last_education' => 'S1 Kedokteran Umum',
-        ]);
+        $targetCount = 10;
 
-        // Create User for Medis - Perawat
-        $userPerawat = User::create([
-            'name' => 'Siti Aminah, S.Kep',
-            'username' => 'perawat',
-            'email' => 'perawat@npci.or.id',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-        ]);
-        $userPerawat->assignRole('Medis');
+        for ($i = 1; $i <= $targetCount; $i++) {
+            $username = 'medis_' . $i;
 
-        Medis::create([
-            'user_id' => $userPerawat->id,
-            'name' => 'Siti Aminah, S.Kep',
-            'klasifikasi' => 'perawat',
-            'nik' => '3201333333333333',
-            'birth_place' => 'Surabaya',
-            'birth_date' => '1990-11-20',
-            'religion' => 'Islam',
-            'gender' => 'P',
-            'address' => 'Jl. Perawat No. 2, Surabaya',
-            'blood_type' => 'A',
-            'last_education' => 'S1 Keperawatan',
-        ]);
+            // Skip if user already exists
+            if (User::where('username', $username)->exists()) {
+                // If medis profile also exists, we're done for this index
+                if (Medis::whereHas('user', fn($q) => $q->where('username', $username))->exists()) {
+                    continue;
+                }
+                // If user exists but no medis profile, we'll use this user
+                $user = User::where('username', $username)->first();
+            } else {
+                $name = $faker->name;
+                $user = User::create([
+                    'name' => $name,
+                    'username' => $username,
+                    'email' => $faker->unique()->safeEmail,
+                    'password' => Hash::make('123123123'),
+                    'email_verified_at' => now(),
+                    'is_active' => 1,
+                ]);
+                $user->assignRole('Medis');
+            }
 
-        $this->command->info('Medis seeded successfully. Check users: dokter / perawat with password 123123123');
+            $klasifikasi = $faker->randomElement(['dokter', 'perawat', 'masseur', 'fisioterapi', 'nutrisionis', 'psikolog']);
+
+            Medis::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'name' => $user->name,
+                    'klasifikasi' => $klasifikasi,
+                    'nik' => $faker->numerify('################'),
+                    'birth_place' => $faker->city,
+                    'birth_date' => $faker->date('Y-m-d', '1995-12-31'),
+                    'religion' => $faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha', 'Konghucu']),
+                    'gender' => $faker->randomElement(['L', 'P']),
+                    'address' => $faker->address,
+                    'blood_type' => $faker->randomElement(['A', 'B', 'AB', 'O']),
+                    'last_education' => $faker->randomElement(['S1 Kedokteran', 'S1 Keperawatan', 'S1 Psikiater']),
+                    'is_active' => 1,
+                ]
+            );
+        }
+
+        $this->command->info('Medis expansion seeded successfully.');
     }
 }

@@ -41,4 +41,9 @@ class Cabor extends Model
     {
         return $this->hasMany(TrainingType::class);
     }
+
+    public function kompetisis()
+    {
+        return $this->hasMany(Kompetisi::class);
+    }
 }

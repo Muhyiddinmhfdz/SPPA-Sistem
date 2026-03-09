@@ -299,7 +299,7 @@
                                         <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Program Pembinaan</span></div>
                                     </div>
 
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('master.training-type.*') ? 'here show' : '' }}">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('master.training-type.*') || request()->routeIs('pembinaan-prestasi.*') ? 'here show' : '' }}">
                                         <span class="menu-link">
                                             <span class="menu-icon">
                                                 <i class="ki-duotone ki-chart-line-star fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
@@ -307,7 +307,13 @@
                                             <span class="menu-title">Pembinaan Prestasi</span>
                                             <span class="menu-arrow"></span>
                                         </span>
-                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('master.training-type.*') ? 'show' : '' }}">
+                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('master.training-type.*') || request()->routeIs('pembinaan-prestasi.*') ? 'show' : '' }}">
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('pembinaan-prestasi.*') ? 'active' : '' }}" href="{{ route('pembinaan-prestasi.index') }}">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Input Program</span>
+                                                </a>
+                                            </div>
                                             <div class="menu-item">
                                                 <a class="menu-link {{ request()->routeIs('master.training-type.*') ? 'active' : '' }}" href="{{ route('master.training-type.index') }}">
                                                     <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
@@ -315,6 +321,17 @@
                                                 </a>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="menu-item">
+                                        <a href="{{ route('kompetisi.index') }}" class="menu-link {{ request()->routeIs('kompetisi.*') ? 'active' : '' }}">
+                                            <span class="menu-icon">
+                                                <i class="ki-duotone ki-medal-star fs-2">
+                                                    <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
+                                                </i>
+                                            </span>
+                                            <span class="menu-title">Modul Kompetisi</span>
+                                        </a>
                                     </div>
 
                                     <div class="menu-item pt-5">

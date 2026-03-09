@@ -15,8 +15,13 @@ class MedisController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Medis::with('user')->latest()->get();
-            return Datatables::of($data)
+            $data = Medis::with('user')->latest();
+
+            if ($request->filled('klasifikasi')) {
+                $data->where('klasifikasi', $request->klasifikasi);
+            }
+
+            return Datatables::of($data->get())
                 ->addIndexColumn()
                 ->addColumn('user_account', function ($row) {
                     return $row->user ? $row->user->username : '-';

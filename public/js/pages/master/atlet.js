@@ -13,7 +13,11 @@ var KTAtletController = function () {
             order: [[1, 'asc']],
             ajax: {
                 url: window.routes.atletIndex,
-                type: 'GET'
+                type: 'GET',
+                data: function (d) {
+                    d.cabor_id = $('#filter_cabor_id').val();
+                    d.klasifikasi_id = $('#filter_klasifikasi_id').val();
+                }
             },
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'ps-4' },
@@ -36,6 +40,16 @@ var KTAtletController = function () {
         datatable.on('draw', function () {
             handleDeleteRows();
             handleEditRows();
+        });
+
+        // Filter handlers
+        $('#filter_cabor_id, #filter_klasifikasi_id').on('change', function () {
+            datatable.ajax.reload();
+        });
+
+        $('#btnResetFilter').on('click', function () {
+            $('#filter_cabor_id, #filter_klasifikasi_id').val('').trigger('change');
+            datatable.ajax.reload();
         });
     }
 
@@ -138,9 +152,9 @@ var KTAtletController = function () {
                         // Select2 Elements
                         $('#cabor_id').val(response.cabor_id).trigger('change');
                         $('#klasifikasi_disabilitas_id').val(response.klasifikasi_disabilitas_id).trigger('change');
+                        $('#jenis_disabilitas_id').val(response.jenis_disabilitas_id).trigger('change');
 
                         $('#name').val(response.name);
-                        $('#jenis_disabilitas').val(response.jenis_disabilitas);
                         $('#nik').val(response.nik);
                         $('#birth_place').val(response.birth_place);
                         $('#birth_date').val(response.birth_date);
@@ -252,6 +266,7 @@ var KTAtletController = function () {
             // Reset Select2 fields inside modal
             $('#cabor_id').val('').trigger('change');
             $('#klasifikasi_disabilitas_id').val('').trigger('change');
+            $('#jenis_disabilitas_id').val('').trigger('change');
 
             $('#modalTitle').text('Tambah Data Atlet');
             $('.is-invalid').removeClass('is-invalid');

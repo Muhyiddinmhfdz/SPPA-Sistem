@@ -23,7 +23,12 @@ class DatabaseSeeder extends Seeder
             KlasifikasiDisabilitasSeeder::class,
             JenisDisabilitasSeeder::class,
             MedisSeeder::class,
+            TrainingSeeder::class,
             AtletSeeder::class,
+            KompetisiSeeder::class,
+            PembinaanPrestasiSeeder::class,
+            CekKesehatanSeeder::class,
+            MonitoringLatihanSeeder::class,
         ]);
     }
 }

@@ -14,6 +14,7 @@ class Atlet extends Model
         'user_id',
         'cabor_id',
         'klasifikasi_disabilitas_id',
+        'jenis_disabilitas_id',
         'name',
         'jenis_disabilitas',
         'nik',
@@ -47,6 +48,11 @@ class Atlet extends Model
         return $this->belongsTo(KlasifikasiDisabilitas::class);
     }
 
+    public function jenisDisabilitas()
+    {
+        return $this->belongsTo(JenisDisabilitas::class, 'jenis_disabilitas_id');
+    }
+
     public function cekKesehatan()
     {
         return $this->hasMany(CekKesehatan::class, 'person_id')
@@ -57,5 +63,10 @@ class Atlet extends Model
     {
         return $this->hasMany(MonitoringLatihan::class, 'person_id')
             ->where('person_type', 'atlet');
+    }
+
+    public function kompetisis()
+    {
+        return $this->hasMany(Kompetisi::class);
     }
 }

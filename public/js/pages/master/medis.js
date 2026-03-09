@@ -13,7 +13,10 @@ var KTMedisController = function () {
             order: [[1, 'asc']],
             ajax: {
                 url: window.routes.medisIndex,
-                type: 'GET'
+                type: 'GET',
+                data: function (d) {
+                    d.klasifikasi = $('#filter_klasifikasi').val();
+                }
             },
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'ps-4' },
@@ -44,6 +47,16 @@ var KTMedisController = function () {
         datatable.on('draw', function () {
             handleDeleteRows();
             handleEditRows();
+        });
+
+        // Filter handlers
+        $('#filter_klasifikasi').on('change', function () {
+            datatable.ajax.reload();
+        });
+
+        $('#btnResetFilter').on('click', function () {
+            $('#filter_klasifikasi').val('').trigger('change');
+            datatable.ajax.reload();
         });
     }
 

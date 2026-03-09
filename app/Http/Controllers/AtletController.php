@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Atlet;
 use App\Models\Cabor;
 use App\Models\KlasifikasiDisabilitas;
+use App\Models\JenisDisabilitas;
 use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +22,15 @@ class AtletController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Atlet::with(['user', 'cabor', 'klasifikasi_disabilitas'])->latest();
+            $data = Atlet::with(['user', 'cabor', 'klasifikasi_disabilitas', 'jenisDisabilitas'])->latest();
+
+            if ($request->filled('cabor_id')) {
+                $data->where('cabor_id', $request->cabor_id);
+            }
+
+            if ($request->filled('klasifikasi_id')) {
+                $data->where('klasifikasi_disabilitas_id', $request->klasifikasi_id);
+            }
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -55,7 +64,8 @@ class AtletController extends Controller
 
         $cabors = Cabor::orderBy('name', 'asc')->get();
         $klasifikasis = KlasifikasiDisabilitas::orderBy('kode_klasifikasi', 'asc')->get();
-        return view('pages.atlet.index', compact('cabors', 'klasifikasis'))
+        $jenisDisabilitas = JenisDisabilitas::orderBy('nama_jenis', 'asc')->get();
+        return view('pages.atlet.index', compact('cabors', 'klasifikasis', 'jenisDisabilitas'))
             ->with(['title' => 'Data Atlet', 'breadcrum' => ['Master Data', 'Data Atlet']]);
     }
 
@@ -67,6 +77,7 @@ class AtletController extends Controller
         $validated = $request->validate([
             'cabor_id' => 'required',
             'klasifikasi_disabilitas_id' => 'required',
+            'jenis_disabilitas_id' => 'required',
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'nullable|email|unique:users,email',
@@ -133,6 +144,7 @@ class AtletController extends Controller
         $validated = $request->validate([
             'cabor_id' => 'required',
             'klasifikasi_disabilitas_id' => 'required',
+            'jenis_disabilitas_id' => 'required',
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $atlet->user_id,
             'email' => 'nullable|email|unique:users,email,' . $atlet->user_id,
@@ -203,7 +215,7 @@ class AtletController extends Controller
     private function fillAtletData(Atlet $atlet, array $data, Request $request)
     {
         // Filling text data
-        $stringFields = ['cabor_id', 'klasifikasi_disabilitas_id', 'name', 'jenis_disabilitas', 'nik', 'birth_place', 'birth_date', 'religion', 'gender', 'address', 'blood_type', 'last_education'];
+        $stringFields = ['cabor_id', 'klasifikasi_disabilitas_id', 'jenis_disabilitas_id', 'name', 'jenis_disabilitas', 'nik', 'birth_place', 'birth_date', 'religion', 'gender', 'address', 'blood_type', 'last_education'];
 
         foreach ($stringFields as $field) {
             if (isset($data[$field])) {

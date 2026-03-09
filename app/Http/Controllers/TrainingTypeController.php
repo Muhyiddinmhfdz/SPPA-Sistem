@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cabor;
 use App\Models\TrainingType;
 use App\Models\TrainingTypeComponent;
+use App\Models\TrainingTypeComponentScore;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -15,12 +16,18 @@ class TrainingTypeController extends Controller
     {
         if ($request->ajax()) {
             $data = TrainingType::with('cabor')->latest();
+
+            if ($request->has('cabor_id') && $request->cabor_id != '') {
+                $data->where('cabor_id', $request->cabor_id);
+            }
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('cabor_name', fn($row) => $row->cabor?->name ?? '-')
                 ->addColumn('components_count', fn($row) => $row->components()->count())
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="d-flex justify-content-center">';
+                    $btn .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-icon btn-bg-light btn-active-color-info btn-sm me-1 viewTrainingType" title="Lihat Detail"><i class="ki-duotone ki-eye fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i></a>';
                     $btn .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 manageComponents" title="Manage Components"><i class="ki-duotone ki-setting-3 fs-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>';
                     $btn .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 editTrainingType"><i class="ki-duotone ki-pencil fs-2"><span class="path1"></span><span class="path2"></span></i></a>';
                     $btn .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm deleteTrainingType"><i class="ki-duotone ki-trash fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>';
@@ -50,6 +57,15 @@ class TrainingTypeController extends Controller
         TrainingType::create($request->all());
 
         return response()->json(['success' => 'Jenis Latihan berhasil ditambahkan.']);
+    }
+
+    public function show($id)
+    {
+        $type = TrainingType::with(['cabor', 'components.scores'])->find($id);
+        if (!$type) {
+            return response()->json(['error' => 'Data tidak ditemukan.'], 404);
+        }
+        return response()->json($type);
     }
 
     public function edit($id)
@@ -129,5 +145,46 @@ class TrainingTypeController extends Controller
         $component->delete();
 
         return response()->json(['success' => 'Komponen Latihan berhasil dihapus.']);
+    }
+
+    // ===== CRITERIA / SCORING MANAGEMENT =====
+
+    public function getScores($componentId)
+    {
+        $scores = TrainingTypeComponentScore::where('training_type_component_id', $componentId)
+            ->orderBy('score', 'desc')
+            ->get();
+        return response()->json($scores);
+    }
+
+    public function storeScore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'training_type_component_id' => 'required|exists:training_type_components,id',
+            'min_value' => 'nullable|numeric',
+            'max_value' => 'nullable|numeric',
+            'label' => 'required|string|max:255',
+            'score' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 422);
+        }
+
+        TrainingTypeComponentScore::create($request->all());
+
+        return response()->json(['success' => 'Kriteria Penilaian berhasil ditambahkan.']);
+    }
+
+    public function destroyScore($id)
+    {
+        $score = TrainingTypeComponentScore::find($id);
+        if (!$score) {
+            return response()->json(['error' => 'Data tidak ditemukan.'], 404);
+        }
+
+        $score->delete();
+
+        return response()->json(['success' => 'Kriteria Penilaian berhasil dihapus.']);
     }
 }

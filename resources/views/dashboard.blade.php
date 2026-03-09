@@ -102,6 +102,12 @@
                     Aktifitas Monitoring
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary d-flex align-items-center pb-5" data-bs-toggle="tab" href="#kt_dashboard_pembinaan">
+                    <i class="ki-duotone ki-chart-line-star fs-2 me-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                    Statistik Pembinaan
+                </a>
+            </li>
         </ul>
     </div>
 </div>
@@ -304,7 +310,7 @@
         </div>
 
         {{-- ===== ROW 4: Training Type per Cabor ===== --}}
-        <div class="row g-4 mb-10">
+        <div class="row g-4 mb-6">
             <div class="col-xl-12">
                 <div class="card chart-card shadow-sm">
                     <div class="card-header border-0 pt-5 pb-0">
@@ -315,6 +321,23 @@
                     </div>
                     <div class="card-body pt-4">
                         <div id="chart_training_type_per_cabor" style="min-height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ===== ROW 5: Medal Monitoring per Cabor ===== --}}
+        <div class="row g-4 mb-10">
+            <div class="col-xl-12">
+                <div class="card chart-card shadow-sm">
+                    <div class="card-header border-0 pt-5 pb-0">
+                        <div>
+                            <h3 class="card-title fw-bold text-gray-900 fs-4">Monitoring Medali Kompetisi</h3>
+                            <p class="text-muted fs-7 mb-0">Total perolehan medali (Emas, Perak, Perunggu) per cabang olahraga</p>
+                        </div>
+                    </div>
+                    <div class="card-body pt-4">
+                        <div id="chart_medal_monitoring" style="min-height: 350px;"></div>
                     </div>
                 </div>
             </div>
@@ -439,6 +462,156 @@
         </div>
     </div>
 </div>
+
+{{-- ===== TAB 3: PEMBINAAN PRESTASI ===== --}}
+<div class="tab-pane fade" id="kt_dashboard_pembinaan" role="tabpanel">
+    <div class="row g-4 mb-6">
+        {{-- Total Pembinaan --}}
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card shadow-sm h-100">
+                <div class="card-body p-5">
+                    <div class="stat-icon bg-light-primary mb-4">
+                        <i class="ki-duotone ki-document fs-2 text-primary">
+                            <span class="path1"></span><span class="path2"></span>
+                        </i>
+                    </div>
+                    <div class="fs-2hx fw-bold text-gray-900">{{ $totalPembinaan }}</div>
+                    <div class="text-muted fs-7 fw-semibold mt-1">Total Program Pembinaan</div>
+                    <a href="{{ route('pembinaan-prestasi.index') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9 col-md-6">
+            <div class="card chart-card shadow-sm h-100">
+                <div class="card-header border-0 pt-5 pb-0">
+                    <h3 class="card-title fw-bold text-gray-900 fs-5">Rata-rata Skor per Cabor</h3>
+                </div>
+                <div class="card-body pt-2 pb-0">
+                    <div id="chart_rata_skor" style="min-height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-6">
+        <div class="col-xl-6">
+            <div class="card chart-card shadow-sm h-100">
+                <div class="card-header border-0 pt-5 pb-0">
+                    <h3 class="card-title fw-bold text-gray-900 fs-5">Distribusi Intensitas Latihan</h3>
+                </div>
+                <div class="card-body pt-2 pb-0">
+                    <div id="chart_intensitas" style="min-height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card chart-card shadow-sm h-100">
+                <div class="card-header border-0 pt-5 pb-0">
+                    <h3 class="card-title fw-bold text-gray-900 fs-5">Distribusi Periodesasi Latihan</h3>
+                </div>
+                <div class="card-body pt-2 pb-0">
+                    <div id="chart_periodesasi" style="min-height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Row 3: Recent Pembinaan --}}
+    <div class="row g-4 mb-10">
+        <div class="col-12">
+            <div class="card chart-card shadow-sm">
+                <div class="card-header border-0 pt-5">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold fs-4 text-gray-900">Program Pembinaan Terbaru</span>
+                        <span class="text-muted mt-1 fw-semibold fs-7">10 program terakhir yang ditambahkan</span>
+                    </h3>
+                </div>
+                <div class="card-body pt-3">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted text-uppercase fs-7">
+                                    <th class="min-w-150px">Tanggal</th>
+                                    <th class="min-w-200px">Atlet</th>
+                                    <th class="min-w-150px">Cabor</th>
+                                    <th class="min-w-100px text-center">Intensitas</th>
+                                    <th class="min-w-100px text-center">Periode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentPembinaan as $p)
+                                <tr>
+                                    <td>
+                                        <span class="text-gray-900 fw-bold fs-6">{{ $p->tanggal ? $p->tanggal->format('d M Y') : '-' }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="d-flex flex-column">
+                                                <span class="text-gray-900 fw-bold fs-6">{{ $p->atlet->name ?? '-' }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-gray-700 fw-semibold d-block fs-7">{{ $p->atlet->cabor->name ?? '-' }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        @php
+                                        $ik = $p->intensitas_latihan;
+                                        $bg = 'light-primary';
+                                        if ($ik == 'sedang') $bg = 'light-warning';
+                                        if ($ik == 'berat') $bg = 'light-danger';
+                                        @endphp
+                                        <span class="badge badge-{{ $bg }} text-capitalize fw-bold">{{ $ik }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-light fw-bold text-capitalize">{{ $p->periodesasi_latihan }}</span>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-5">Belum ada program pembinaan.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{{-- ===== MODAL: MEDAL DETAILS ===== --}}
+<div class="modal fade" id="kt_modal_medal_details" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="fw-bold" id="modal_medal_title">Detail Perolehan Medali</h2>
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4" id="table_medal_details">
+                        <thead>
+                            <tr class="fw-bold text-muted text-uppercase fs-7">
+                                <th class="min-w-150px">Atlet</th>
+                                <th class="min-w-200px">Kompetisi</th>
+                                <th class="min-w-100px text-center">Medali</th>
+                                <th class="min-w-80px text-end">Tahun</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medal_details_body">
+                            {{-- Content filled via AJAX --}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -452,13 +625,21 @@
     var medisByType = @json($medisByType);
     var atletLaki = @json($atletLaki);
     var atletWanita = @json($atletWanita);
+    var medalStats = @json($medalStats);
+
+    // ===== PEMBINAAN PRESTASI DATA =====
+    var distribusiIntensitas = @json($distribusiIntensitas ?? []);
+    var distribusiPeriodesasi = @json($distribusiPeriodesasi ?? []);
+    var rataSkorCabor = @json($rataSkorCabor ?? []);
 
     var primaryColor = '#009ef7';
     var successColor = '#50cd89';
-    var warningColor = '#ffc700';
+    var warningColor = '#ffc700'; // Emas
     var dangerColor = '#f1416c';
     var purpleColor = '#7c3aed';
     var tealColor = '#059669';
+    var perakColor = '#94a3b8'; // Perak
+    var perungguColor = '#a855f7'; // Perunggu
 
     // ===== 1. Atlet per Cabor (Horizontal Bar) =====
     var opts1 = {
@@ -778,5 +959,295 @@
         }
     };
     new ApexCharts(document.querySelector("#chart_training_type_per_cabor"), opts6).render();
+
+    // ===== 7. Medal Monitoring (Grouped Bar) =====
+    var opts7 = {
+        series: [{
+            name: 'Emas',
+            data: medalStats.map(d => d.emas)
+        }, {
+            name: 'Perak',
+            data: medalStats.map(d => d.perak)
+        }, {
+            name: 'Perunggu',
+            data: medalStats.map(d => d.perunggu)
+        }],
+        chart: {
+            type: 'bar',
+            height: 350,
+            toolbar: {
+                show: false
+            },
+            fontFamily: 'inherit',
+            events: {
+                dataPointSelection: function(event, chartContext, config) {
+                    var caborIndex = config.dataPointIndex;
+                    var caborId = medalStats[caborIndex].id;
+                    showMedalDetails(caborId);
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                borderRadius: 4
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        colors: [warningColor, perakColor, perungguColor],
+        xaxis: {
+            categories: medalStats.map(d => d.name),
+            labels: {
+                style: {
+                    colors: '#a1a5b7',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Jumlah Medali',
+                style: {
+                    color: '#a1a5b7'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#5e6278',
+                    fontSize: '11px'
+                }
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function(val) {
+                    return val + " Medali"
+                }
+            }
+        },
+        grid: {
+            borderColor: '#f1f1f2',
+            strokeDashArray: 4
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'center',
+            fontSize: '12px',
+            fontWeight: 600
+        }
+    };
+    new ApexCharts(document.querySelector("#chart_medal_monitoring"), opts7).render();
+
+    // ===== Function to show medal details modal =====
+    function showMedalDetails(caborId) {
+        var modal = new bootstrap.Modal(document.getElementById('kt_modal_medal_details'));
+        var body = document.getElementById('medal_details_body');
+        var title = document.getElementById('modal_medal_title');
+
+        body.innerHTML = '<tr><td colspan="4" class="text-center py-10"><span class="spinner-border spinner-border-sm align-middle ms-2"></span> Loading...</td></tr>';
+        modal.show();
+
+        fetch(`/dashboard/medal-details/${caborId}`)
+            .then(response => response.json())
+            .then(data => {
+                title.innerText = `Detail Perolehan Medali: ${data.cabor_name}`;
+                body.innerHTML = '';
+
+                if (data.details.length === 0) {
+                    body.innerHTML = '<tr><td colspan="4" class="text-center py-10 text-muted">Tidak ada data medali untuk cabor ini.</td></tr>';
+                    return;
+                }
+
+                data.details.forEach(item => {
+                    var badgeClass = item.medali === 'emas' ? 'warning' : (item.medali === 'perak' ? 'secondary' : 'info');
+                    var badgeColor = item.medali === 'emas' ? '#ffc700' : (item.medali === 'perak' ? '#94a3b8' : '#a855f7');
+
+                    var row = `
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-35px symbol-circle me-3">
+                                        <span class="symbol-label bg-light-primary text-primary fw-bold">${item.atlet_name.charAt(0)}</span>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-gray-900 fw-bold fs-6">${item.atlet_name}</span>
+                                        <span class="text-muted fs-7">${item.tingkatan}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-gray-800 fw-semibold d-block fs-7">${item.nama_kompetisi}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge fw-bold px-4 py-3 text-uppercase" style="background-color: ${badgeColor}; color: #fff;">${item.medali}</span>
+                            </td>
+                            <td class="text-end">
+                                <span class="text-gray-700 fw-bold d-block fs-7">${item.tahun}</span>
+                            </td>
+                        </tr>
+                    `;
+                    body.innerHTML += row;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                body.innerHTML = '<tr><td colspan="4" class="text-center py-10 text-danger">Gagal memuat data.</td></tr>';
+            });
+    }
+
+    // ===== PEMBINAAN PRESTASI CHARTS =====
+    // 1. Rata-rata Skor per Cabor (Bar Chart)
+    if (document.querySelector("#chart_rata_skor")) {
+        var optsRataSkor = {
+            series: [{
+                name: 'Rata-rata Skor',
+                data: rataSkorCabor.map(d => d.score)
+            }],
+            chart: {
+                type: 'bar',
+                height: 250,
+                toolbar: {
+                    show: false
+                },
+                fontFamily: 'inherit'
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    distributed: true,
+                    columnWidth: '50%'
+                }
+            },
+            colors: [primaryColor, successColor, warningColor, dangerColor, purpleColor, tealColor, perakColor, perungguColor],
+            dataLabels: {
+                enabled: true,
+                formatter: function(val) {
+                    return val;
+                },
+                style: {
+                    fontSize: '11px',
+                    fontWeight: 700
+                }
+            },
+            xaxis: {
+                categories: rataSkorCabor.map(d => d.name),
+                labels: {
+                    style: {
+                        colors: '#a1a5b7',
+                        fontSize: '11px'
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: '#5e6278',
+                        fontSize: '11px'
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#f1f1f2',
+                strokeDashArray: 4
+            },
+            legend: {
+                show: false
+            },
+            tooltip: {
+                theme: 'dark'
+            }
+        };
+        new ApexCharts(document.querySelector("#chart_rata_skor"), optsRataSkor).render();
+    }
+
+    // 2. Distribusi Intensitas (Donut)
+    if (document.querySelector("#chart_intensitas")) {
+        var optsIntensitas = {
+            series: distribusiIntensitas.map(d => d.count),
+            chart: {
+                type: 'donut',
+                height: 250,
+                fontFamily: 'inherit'
+            },
+            labels: distribusiIntensitas.map(d => d.name),
+            colors: [primaryColor, warningColor, dangerColor], // Ringan, Sedang, Berat
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                fontSize: '14px',
+                                fontWeight: 700
+                            }
+                        }
+                    }
+                }
+            },
+            legend: {
+                position: 'bottom',
+                fontSize: '12px',
+                fontWeight: 600
+            },
+            tooltip: {
+                theme: 'dark'
+            }
+        };
+        new ApexCharts(document.querySelector("#chart_intensitas"), optsIntensitas).render();
+    }
+
+    // 3. Distribusi Periodesasi (Donut)
+    if (document.querySelector("#chart_periodesasi")) {
+        var optsPeriodesasi = {
+            series: distribusiPeriodesasi.map(d => d.count),
+            chart: {
+                type: 'donut',
+                height: 250,
+                fontFamily: 'inherit'
+            },
+            labels: distribusiPeriodesasi.map(d => d.name),
+            colors: [successColor, purpleColor, tealColor],
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                fontSize: '14px',
+                                fontWeight: 700
+                            }
+                        }
+                    }
+                }
+            },
+            legend: {
+                position: 'bottom',
+                fontSize: '12px',
+                fontWeight: 600
+            },
+            tooltip: {
+                theme: 'dark'
+            }
+        };
+        new ApexCharts(document.querySelector("#chart_periodesasi"), optsPeriodesasi).render();
+    }
 </script>
 @endsection

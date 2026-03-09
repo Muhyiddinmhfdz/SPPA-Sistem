@@ -7,6 +7,9 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Atlet;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Cabor;
+use App\Models\JenisDisabilitas;
+use App\Models\KlasifikasiDisabilitas;
 
 class AtletSeeder extends Seeder
 {
@@ -17,56 +20,48 @@ class AtletSeeder extends Seeder
     {
         $faker = \Faker\Factory::create('id_ID');
 
-        // Create User for Atlet 1
-        $userAtlet1 = User::create([
-            'name' => 'Budi Santoso',
-            'username' => 'budi_atlet',
-            'email' => 'budi@npci.or.id',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-        ]);
-        $userAtlet1->assignRole('Atlet');
+        $cabors = Cabor::pluck('id')->toArray();
+        $jenisDisabilitas = JenisDisabilitas::pluck('id')->toArray();
+        $klasifikasi = KlasifikasiDisabilitas::pluck('id')->toArray();
 
-        Atlet::create([
-            'user_id' => $userAtlet1->id,
-            'cabor_id' => 1, // Para Atletik
-            'klasifikasi_disabilitas_id' => 1, // T11
-            'name' => 'Budi Santoso',
-            'jenis_disabilitas' => 'Tuna Netra Total',
-            'nik' => '3201112233445001',
-            'birth_place' => 'Bandung',
-            'birth_date' => '1995-10-15',
-            'religion' => 'Islam',
-            'gender' => 'L',
-            'address' => 'Jl. Merdeka No. 10, Bandung',
-            'blood_type' => 'O',
-            'last_education' => 'SMA',
-        ]);
+        if (empty($cabors)) {
+            $this->command->error('Cabor data empty. Please run CaborSeeder first.');
+            return;
+        }
 
-        // Create User for Atlet 2
-        $userAtlet2 = User::create([
-            'name' => 'Siti Aminah',
-            'username' => 'siti_atlet',
-            'email' => 'siti@npci.or.id',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-        ]);
-        $userAtlet2->assignRole('Atlet');
+        $targetCount = 30;
+        $currentCount = Atlet::count();
 
-        Atlet::create([
-            'user_id' => $userAtlet2->id,
-            'cabor_id' => 2, // Para Bulutangkis
-            'klasifikasi_disabilitas_id' => 2, // T12
-            'name' => 'Siti Aminah',
-            'jenis_disabilitas' => 'Tuna Netra Parsial',
-            'nik' => '3201112233445002',
-            'birth_place' => 'Jakarta',
-            'birth_date' => '1998-05-20',
-            'religion' => 'Islam',
-            'gender' => 'P',
-            'address' => 'Jl. Sudirman No. 45, Jakarta',
-            'blood_type' => 'A',
-            'last_education' => 'S1 Olahraga',
-        ]);
+        for ($i = $currentCount + 1; $i <= $targetCount; $i++) {
+            $name = $faker->name;
+            $username = strtolower(str_replace(' ', '_', $name)) . '_' . $i;
+
+            $user = User::create([
+                'name' => $name,
+                'username' => $username,
+                'email' => $faker->unique()->safeEmail,
+                'password' => Hash::make('123123123'),
+                'email_verified_at' => now(),
+            ]);
+            $user->assignRole('Atlet');
+
+            Atlet::create([
+                'user_id' => $user->id,
+                'cabor_id' => $faker->randomElement($cabors),
+                'jenis_disabilitas_id' => $faker->randomElement($jenisDisabilitas),
+                'klasifikasi_disabilitas_id' => $faker->randomElement($klasifikasi),
+                'name' => $name,
+                'jenis_disabilitas' => 'Tuna ' . $faker->word,
+                'nik' => $faker->numerify('################'),
+                'birth_place' => $faker->city,
+                'birth_date' => $faker->date('Y-m-d', '2005-12-31'),
+                'religion' => $faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha', 'Konghucu']),
+                'gender' => $faker->randomElement(['L', 'P']),
+                'address' => $faker->address,
+                'blood_type' => $faker->randomElement(['A', 'B', 'AB', 'O']),
+                'last_education' => $faker->randomElement(['SMP', 'SMA', 'S1', 'Diploma']),
+                'is_active' => 1,
+            ]);
+        }
     }
 }

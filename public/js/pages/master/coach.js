@@ -7,7 +7,13 @@ var KTCoachController = function () {
         table = $('#table_pelatihan').DataTable({
             processing: true,
             serverSide: true,
-            ajax: window.routes.coachIndex,
+            ajax: {
+                url: window.routes.coachIndex,
+                type: 'GET',
+                data: function (d) {
+                    d.cabor_id = $('#filter_cabor_id').val();
+                }
+            },
             columns: [
                 {
                     data: 'DT_RowIndex',
@@ -58,6 +64,16 @@ var KTCoachController = function () {
             dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        });
+
+        // Filter handlers
+        $('#filter_cabor_id').on('change', function () {
+            table.draw();
+        });
+
+        $('#btnResetFilter').on('click', function () {
+            $('#filter_cabor_id').val('').trigger('change');
+            table.draw();
         });
     }
 

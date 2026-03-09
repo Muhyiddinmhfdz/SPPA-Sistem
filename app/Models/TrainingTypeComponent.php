@@ -20,4 +20,9 @@ class TrainingTypeComponent extends Model
     {
         return $this->belongsTo(TrainingType::class);
     }
+
+    public function scores()
+    {
+        return $this->hasMany(TrainingTypeComponentScore::class, 'training_type_component_id')->orderBy('score', 'desc');
+    }
 }

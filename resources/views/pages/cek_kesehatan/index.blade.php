@@ -217,6 +217,17 @@
 {{-- TABS --}}
 <div class="card shadow-sm">
     <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Daftar Pemeriksaan</span>
+            <span class="text-muted mt-1 fw-semibold fs-7">Data pemeriksaan kesehatan atlet dan pelatih</span>
+        </h3>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-sm btn-primary" id="btnTambahCekKesehatan">
+                <i class="ki-duotone ki-plus fs-2"></i>Tambah Pemeriksaan
+            </button>
+        </div>
+    </div>
+    <div class="card-header border-0 pt-0">
         <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fw-semibold">
             <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="tab" href="#tab_atlet">
