@@ -58,6 +58,22 @@ class JenisTesController extends Controller
             ]);
     }
 
+    public function getDetail($id)
+    {
+        $category = PhysicalTestCategory::with([
+            'cabor',
+            'items' => function ($q) {
+                $q->where('is_active', 1)->orderBy('id', 'asc');
+            },
+            'items.jenisDisabilitas',
+            'items.scores' => function ($q) {
+                $q->where('is_active', 1)->orderBy('score', 'desc');
+            }
+        ])->findOrFail($id);
+
+        return response()->json(['data' => $category]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

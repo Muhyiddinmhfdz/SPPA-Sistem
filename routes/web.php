@@ -63,6 +63,7 @@ Route::name('master.')->middleware('auth')->prefix('master')->group(function () 
     Route::get('jenis-tes/items/{categoryId}', [App\Http\Controllers\JenisTesController::class, 'getItems'])->name('jenis-tes.get-items');
     Route::post('jenis-tes/item-store', [App\Http\Controllers\JenisTesController::class, 'storeItem'])->name('jenis-tes.store-item');
     Route::delete('jenis-tes/item-delete/{id}', [App\Http\Controllers\JenisTesController::class, 'destroyItem'])->name('jenis-tes.delete-item');
+    Route::get('jenis-tes/detail/{id}', [App\Http\Controllers\JenisTesController::class, 'getDetail'])->name('jenis-tes.detail');
 
     Route::get('jenis-tes/scores/{itemId}', [App\Http\Controllers\JenisTesController::class, 'getScores'])->name('jenis-tes.get-scores');
     Route::post('jenis-tes/score-store', [App\Http\Controllers\JenisTesController::class, 'storeScore'])->name('jenis-tes.store-score');
