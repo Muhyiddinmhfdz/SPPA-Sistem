@@ -199,13 +199,28 @@ var KTPembinaanPrestasi = function () {
                     $('.form-control, .form-select').removeClass('is-invalid');
 
                     if (errors) {
+                        var errorMsg = '';
+                        var hasComponentError = false;
                         $.each(errors, function (key, value) {
                             if (key.includes('components')) {
                                 $('#componentsError').text('Pastikan nilai latihan valid.');
+                                if (!hasComponentError) {
+                                    errorMsg += 'Pastikan nilai komponen latihan valid.<br>';
+                                    hasComponentError = true;
+                                }
                             } else {
                                 $('#' + key).addClass('is-invalid');
                                 $('#' + key + 'Error').text(value[0]);
+                                errorMsg += value[0] + '<br>';
                             }
+                        });
+
+                        Swal.fire({
+                            html: errorMsg,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, Mengerti!",
+                            customClass: { confirmButton: "btn btn-primary" }
                         });
                     } else {
                         Swal.fire({ text: xhr.responseJSON.error || "Terjadi kesalahan.", icon: "error", buttonsStyling: false, confirmButtonText: "Ok!", customClass: { confirmButton: "btn btn-primary" } });

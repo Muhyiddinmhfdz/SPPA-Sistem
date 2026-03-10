@@ -139,10 +139,20 @@ var KTKompetisiController = function () {
 
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
+                        var errorMsg = '';
                         $.each(errors, function (key, value) {
                             var input = $('[name="' + key + '"]');
                             input.addClass('is-invalid');
                             input.parent().append('<div class="invalid-feedback">' + value[0] + '</div>');
+                            errorMsg += value[0] + '<br>';
+                        });
+
+                        Swal.fire({
+                            html: errorMsg,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, Mengerti!",
+                            customClass: { confirmButton: "btn btn-primary" }
                         });
                     } else {
                         Swal.fire({

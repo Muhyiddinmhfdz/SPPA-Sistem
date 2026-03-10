@@ -98,6 +98,13 @@ class PembinaanPrestasiController extends Controller
             'intensitas_latihan' => 'required|string',
             'components' => 'required|array',
             'target_performa' => 'nullable|string',
+        ], [
+            'atlet_id.required' => 'Atlet wajib dipilih.',
+            'atlet_id.exists' => 'Atlet yang dipilih tidak valid.',
+            'periodesasi_latihan.required' => 'Periode latihan wajib dipilih.',
+            'intensitas_latihan.required' => 'Intensitas latihan wajib dipilih.',
+            'components.required' => 'Komponen latihan wajib diisi minimal satu.',
+            'components.array' => 'Format komponen latihan tidak valid.'
         ]);
 
         DB::beginTransaction();
@@ -163,6 +170,13 @@ class PembinaanPrestasiController extends Controller
             'intensitas_latihan' => 'required|string',
             'components' => 'required|array',
             'target_performa' => 'nullable|string',
+        ], [
+            'atlet_id.required' => 'Atlet wajib dipilih.',
+            'atlet_id.exists' => 'Atlet yang dipilih tidak valid.',
+            'periodesasi_latihan.required' => 'Periode latihan wajib dipilih.',
+            'intensitas_latihan.required' => 'Intensitas latihan wajib dipilih.',
+            'components.required' => 'Komponen latihan wajib diisi minimal satu.',
+            'components.array' => 'Format komponen latihan tidak valid.'
         ]);
 
         DB::beginTransaction();

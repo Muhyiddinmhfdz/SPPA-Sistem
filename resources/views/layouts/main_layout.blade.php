@@ -335,6 +335,34 @@
                                     </div>
 
                                     <div class="menu-item pt-5">
+                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Tes & Evaluasi</span></div>
+                                    </div>
+
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('tes-performa.*') || request()->routeIs('jenis-tes.*') ? 'here show' : '' }}">
+                                        <span class="menu-link">
+                                            <span class="menu-icon">
+                                                <i class="ki-duotone ki-clipboard fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                            </span>
+                                            <span class="menu-title">Tes & Evaluasi Performa</span>
+                                            <span class="menu-arrow"></span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion {{ request()->routeIs('tes-performa.*') || request()->routeIs('jenis-tes.*') ? 'show' : '' }}">
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('tes-performa.*') ? 'active' : '' }}" href="#">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Input Tes Performa</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ request()->routeIs('master.jenis-tes.*') ? 'active' : '' }}" href="{{ route('master.jenis-tes.index') }}">
+                                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                    <span class="menu-title">Komponen Tes Fisik</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="menu-item pt-5">
                                         <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Pengaturan</span></div>
                                     </div>
 

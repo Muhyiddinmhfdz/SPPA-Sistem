@@ -83,6 +83,15 @@ class KompetisiController extends Controller
             'hasil_peringkat' => 'nullable|string|max:255',
             'hasil_medali' => 'nullable|in:emas,perak,perunggu,tanpa_medali',
             'kesimpulan_evaluasi' => 'nullable|string',
+        ], [
+            'cabor_id.required' => 'Cabang Olahraga wajib dipilih.',
+            'cabor_id.exists' => 'Cabang Olahraga yang dipilih tidak valid.',
+            'atlet_id.required' => 'Atlet wajib dipilih.',
+            'atlet_id.exists' => 'Atlet yang dipilih tidak valid.',
+            'tingkatan.required' => 'Tingkatan wajib dipilih.',
+            'nama_kompetisi.required' => 'Nama Kompetisi wajib diisi.',
+            'waktu_pelaksanaan.required' => 'Waktu Pelaksanaan wajib diisi.',
+            'tempat_pelaksanaan.required' => 'Tempat Pelaksanaan wajib diisi.',
         ]);
 
         if ($validator->fails()) {
@@ -121,6 +130,15 @@ class KompetisiController extends Controller
             'hasil_peringkat' => 'nullable|string|max:255',
             'hasil_medali' => 'nullable|in:emas,perak,perunggu,tanpa_medali',
             'kesimpulan_evaluasi' => 'nullable|string',
+        ], [
+            'cabor_id.required' => 'Cabang Olahraga wajib dipilih.',
+            'cabor_id.exists' => 'Cabang Olahraga yang dipilih tidak valid.',
+            'atlet_id.required' => 'Atlet wajib dipilih.',
+            'atlet_id.exists' => 'Atlet yang dipilih tidak valid.',
+            'tingkatan.required' => 'Tingkatan wajib dipilih.',
+            'nama_kompetisi.required' => 'Nama Kompetisi wajib diisi.',
+            'waktu_pelaksanaan.required' => 'Waktu Pelaksanaan wajib diisi.',
+            'tempat_pelaksanaan.required' => 'Tempat Pelaksanaan wajib diisi.',
         ]);
 
         if ($validator->fails()) {
