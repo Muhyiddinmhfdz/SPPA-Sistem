@@ -11,6 +11,7 @@ use App\Models\KlasifikasiDisabilitas;
 use App\Models\JenisDisabilitas;
 use App\Models\TrainingType;
 use App\Models\PembinaanPrestasi;
+use App\Models\PerformanceTest;
 
 use App\Models\CekKesehatan;
 use App\Models\MonitoringLatihan;
@@ -163,6 +164,53 @@ class DashboardController extends Controller
         // Recent Pembinaan
         $recentPembinaan = (clone $pembinaanQuery)->latest()->limit(10)->get();
 
+        // ===== TAB 4: TES PERFORMA STATS =====
+        $tesPerformaQuery = PerformanceTest::where('is_active', 1);
+
+        // Role filter for tes performa
+        if ($isAtlet) {
+            $tesPerformaQuery->where('atlet_id', $user->atlet?->id);
+        } elseif ($isPelatih) {
+            $caborId = $user->coach?->cabor_id;
+            $tesPerformaQuery->where('cabor_id', $caborId);
+        }
+
+        $totalTesPerforma = (clone $tesPerformaQuery)->count();
+
+        // Status kesehatan distribution
+        $distribusiStatusKesehatan = (clone $tesPerformaQuery)
+            ->select('status_kesehatan', DB::raw('count(*) as count'))
+            ->groupBy('status_kesehatan')
+            ->get()
+            ->map(fn($i) => ['name' => ucfirst($i->status_kesehatan), 'count' => $i->count])
+            ->values();
+
+        $totalFit         = (clone $tesPerformaQuery)->where('status_kesehatan', 'fit')->count();
+        $totalCidera      = (clone $tesPerformaQuery)->where('status_kesehatan', 'cidera')->count();
+        $totalRehabilitasi = (clone $tesPerformaQuery)->where('status_kesehatan', 'rehabilitasi')->count();
+
+        // Tes per Cabor
+        $tesPerCabor = Cabor::where('is_active', 1)
+            ->withCount(['performanceTests as tes_count' => function ($q) use ($isAtlet, $isPelatih, $user) {
+                $q->where('is_active', 1);
+                if ($isAtlet) {
+                    $q->where('atlet_id', $user->atlet?->id);
+                } elseif ($isPelatih) {
+                    $q->where('cabor_id', $user->coach?->cabor_id);
+                }
+            }])
+            ->get()
+            ->map(fn($c) => ['name' => $c->name, 'count' => $c->tes_count])
+            ->filter(fn($c) => $c['count'] > 0)
+            ->values();
+
+        // Recent 10 tes performa
+        $recentTesPerforma = (clone $tesPerformaQuery)
+            ->with(['atlet', 'cabor', 'jenisDisabilitas'])
+            ->latest('tanggal_pelaksanaan')
+            ->limit(10)
+            ->get();
+
         $title = 'Dashboard';
         $breadcrum = ['Dashboard', 'Statistik Overview'];
 
@@ -189,6 +237,13 @@ class DashboardController extends Controller
             'distribusiPeriodesasi',
             'rataSkorCabor',
             'recentPembinaan',
+            'totalTesPerforma',
+            'distribusiStatusKesehatan',
+            'totalFit',
+            'totalCidera',
+            'totalRehabilitasi',
+            'tesPerCabor',
+            'recentTesPerforma',
             'title',
             'breadcrum'
         ));
@@ -216,6 +271,43 @@ class DashboardController extends Controller
         return response()->json([
             'cabor_name' => $cabor?->name ?? 'Unknown',
             'details' => $details
+        ]);
+    }
+
+    public function getPerformanceTestDetails($id)
+    {
+        $test = PerformanceTest::with(['atlet', 'cabor', 'jenisDisabilitas', 'klasifikasiDisabilitas'])
+            ->findOrFail($id);
+
+        $results = DB::table('performance_test_results')
+            ->join('physical_test_items', 'performance_test_results.physical_test_item_id', '=', 'physical_test_items.id')
+            ->join('physical_test_categories', 'physical_test_items.physical_test_category_id', '=', 'physical_test_categories.id')
+            ->leftJoin('physical_test_item_scores', 'performance_test_results.physical_test_item_score_id', '=', 'physical_test_item_scores.id')
+            ->where('performance_test_results.performance_test_id', $id)
+            ->where('performance_test_results.is_active', 1)
+            ->select(
+                'physical_test_items.name as item_name',
+                'physical_test_items.satuan',
+                'performance_test_results.nilai',
+                'physical_test_categories.name as category_name',
+                'physical_test_item_scores.label as score_label',
+                'physical_test_item_scores.score as numeric_score'
+            )
+            ->get();
+
+        return response()->json([
+            'test' => [
+                'tanggal' => $test->tanggal_pelaksanaan?->format('d M Y'),
+                'atlet_name' => $test->atlet?->name,
+                'cabor_name' => $test->cabor?->name,
+                'status_kesehatan' => ucfirst($test->status_kesehatan),
+                'spesialisasi' => $test->spesialisasi,
+                'penguji' => $test->penguji,
+                'alat_bantu' => $test->alat_bantu,
+                'disabilitas' => $test->jenisDisabilitas?->nama_jenis ?? 'Umum',
+                'klasifikasi' => $test->klasifikasiDisabilitas?->kode_klasifikasi ?? '-'
+            ],
+            'results' => $results
         ]);
     }
 }

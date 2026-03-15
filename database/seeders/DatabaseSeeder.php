@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CekKesehatanSeeder::class,
             MonitoringLatihanSeeder::class,
             PhysicalTestSeeder::class,
+            PerformanceTestSeeder::class,
         ]);
     }
 }

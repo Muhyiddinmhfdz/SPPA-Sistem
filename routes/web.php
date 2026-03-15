@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {});
 Route::name('dashboard.')->middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/medal-details/{caborId}', [DashboardController::class, 'getMedalDetails'])->name('medal-details');
+    Route::get('/performance-test-details/{id}', [DashboardController::class, 'getPerformanceTestDetails'])->name('performance-test-detail');
 });
 
 // Remove trailing dot for the direct dashboard route to fix the 'Route [dashboard] not defined' error
@@ -140,4 +141,16 @@ Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(functi
     Route::put('/{id}', [KompetisiController::class, 'update'])->name('update');
     Route::delete('/{id}', [KompetisiController::class, 'destroy'])->name('destroy');
     Route::get('/atlets/{caborId}', [KompetisiController::class, 'getAtletsByCabor'])->name('get-atlets');
+});
+
+// ── Tes Performa ──────────────────────────────────────────────────────────────
+Route::middleware('auth')->prefix('tes-performa')->name('tes-performa.')->group(function () {
+    Route::get('/', [App\Http\Controllers\PerformanceTestController::class, 'index'])->name('index');
+    Route::post('/', [App\Http\Controllers\PerformanceTestController::class, 'store'])->name('store');
+    Route::get('/atlet-data/{atletId}', [App\Http\Controllers\PerformanceTestController::class, 'getAtletData'])->name('atlet-data');
+    Route::get('/test-items/{atletId}', [App\Http\Controllers\PerformanceTestController::class, 'getTestItems'])->name('test-items');
+    Route::get('/{id}', [App\Http\Controllers\PerformanceTestController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [App\Http\Controllers\PerformanceTestController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [App\Http\Controllers\PerformanceTestController::class, 'update'])->name('update');
+    Route::delete('/{id}', [App\Http\Controllers\PerformanceTestController::class, 'destroy'])->name('destroy');
 });
