@@ -47,7 +47,14 @@ class KlasifikasiDisabilitasSeeder extends Seeder
         ];
 
         foreach ($klasifikasi as $item) {
-            KlasifikasiDisabilitas::create($item);
+            KlasifikasiDisabilitas::updateOrCreate(
+                ['kode_klasifikasi' => $item['kode_klasifikasi']],
+                [
+                    'nama_klasifikasi' => $item['nama_klasifikasi'],
+                    'deskripsi' => $item['deskripsi'],
+                    'is_active' => 1,
+                ]
+            );
         }
     }
 }

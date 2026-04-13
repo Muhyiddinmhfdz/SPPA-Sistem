@@ -50,6 +50,13 @@
                             <span class="text-muted mt-1 fw-semibold fs-7">Manajemen master dan biodata Atlet NPCI</span>
                         </h3>
                         <div class="card-toolbar">
+                            <a href="{{ route('master.atlet.export-template') }}" class="btn btn-light-success me-3">
+                                <i class="ki-duotone ki-file-down fs-2"><span class="path1"></span><span class="path2"></span></i>Export Template
+                            </a>
+                            <button type="button" class="btn btn-light-primary me-3" id="btnImportAtlet">
+                                <i class="ki-duotone ki-file-up fs-2"><span class="path1"></span><span class="path2"></span></i>Import Atlet
+                            </button>
+                            <input type="file" id="importFileAtlet" class="d-none" accept=".xlsx, .xls">
                             <a href="#" class="btn btn-primary" id="btnTambahAtlet" data-bs-toggle="modal" data-bs-target="#kt_modal_atlet">
                                 <i class="ki-duotone ki-plus fs-2"></i>Tambah Atlet
                             </a>
@@ -327,7 +334,9 @@
         <script>
             window.routes = {
                 atletIndex: "{{ route('master.atlet.index') }}",
-                atletStore: "{{ route('master.atlet.store') }}"
+                atletStore: "{{ route('master.atlet.store') }}",
+                atletExportTemplate: "{{ route('master.atlet.export-template') }}",
+                atletImport: "{{ route('master.atlet.import') }}"
             };
             window.baseUrl = "{{ url('/') }}";
             var csrf_token = "{{ csrf_token() }}";

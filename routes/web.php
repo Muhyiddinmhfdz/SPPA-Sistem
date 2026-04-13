@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {});
 Route::name('dashboard.')->middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/medal-details/{caborId}', [DashboardController::class, 'getMedalDetails'])->name('medal-details');
-    Route::get('/performance-test-details/{id}', [DashboardController::class, 'getPerformanceTestDetails'])->name('performance-test-detail');
+    Route::get('/performance-test-detail/{id}', [DashboardController::class, 'getPerformanceTestDetails'])->name('performance-test-detail');
 });
 
 // Remove trailing dot for the direct dashboard route to fix the 'Route [dashboard] not defined' error
@@ -41,18 +41,26 @@ Route::name('master.')->middleware('auth')->prefix('master')->group(function () 
     Route::resource('user', UserController::class)->except(['create', 'show']);
 
     // Cabor Management Routes
+    Route::get('cabor/export-template', [CaborController::class, 'downloadTemplate'])->name('cabor.export-template');
+    Route::post('cabor/import', [CaborController::class, 'import'])->name('cabor.import');
     Route::resource('cabor', CaborController::class)->except(['create', 'show']);
 
     // Coach Management Routes
+    Route::get('coach/export-template', [CoachController::class, 'downloadTemplate'])->name('coach.export-template');
+    Route::post('coach/import', [CoachController::class, 'import'])->name('coach.import');
     Route::resource('coach', CoachController::class)->except(['create', 'show']);
 
     // Klasifikasi Disabilitas Routes
     Route::resource('klasifikasi-disabilitas', KlasifikasiDisabilitasController::class)->except(['create', 'show']);
 
     // Medis Routes
+    Route::get('medis/export-template', [MedisController::class, 'downloadTemplate'])->name('medis.export-template');
+    Route::post('medis/import', [MedisController::class, 'import'])->name('medis.import');
     Route::resource('medis', MedisController::class)->except(['create', 'show']);
 
     // Atlet Routes
+    Route::get('atlet/export-template', [AtletController::class, 'downloadTemplate'])->name('atlet.export-template');
+    Route::post('atlet/import', [AtletController::class, 'import'])->name('atlet.import');
     Route::resource('atlet', AtletController::class)->except(['create', 'show']);
 
     // Jenis Disabilitas Routes

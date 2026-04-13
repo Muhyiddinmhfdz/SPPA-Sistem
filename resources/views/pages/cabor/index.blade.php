@@ -10,6 +10,13 @@
                     <span class="text-muted mt-1 fw-semibold fs-7">Manajemen master data cabang olahraga</span>
                 </h3>
                 <div class="card-toolbar">
+                    <a href="{{ route('master.cabor.export-template') }}" class="btn btn-sm btn-light-success fw-bold me-3">
+                        <i class="ki-duotone ki-file-down fs-2"><span class="path1"></span><span class="path2"></span></i> Export Template
+                    </a>
+                    <button type="button" class="btn btn-sm btn-light-primary fw-bold me-3" id="btnImportCabor">
+                        <i class="ki-duotone ki-file-up fs-2"><span class="path1"></span><span class="path2"></span></i> Import Cabor
+                    </button>
+                    <input type="file" id="importFileCabor" class="d-none" accept=".xlsx, .xls">
                     <button type="button" class="btn btn-sm btn-light-primary fw-bold" data-bs-toggle="modal" data-bs-target="#kt_modal_cabor" id="btnTambahCabor">
                         <i class="ki-duotone ki-plus fs-2"><span class="path1"></span><span class="path2"></span></i> Tambah Cabang Olahraga
                     </button>
@@ -213,7 +220,9 @@
 <script>
     window.routes = {
         caborIndex: "{{ route('master.cabor.index') }}",
-        caborStore: "{{ route('master.cabor.store') }}"
+        caborStore: "{{ route('master.cabor.store') }}",
+        caborExportTemplate: "{{ route('master.cabor.export-template') }}",
+        caborImport: "{{ route('master.cabor.import') }}"
     };
     window.baseUrl = "{{ url('/') }}";
 </script>

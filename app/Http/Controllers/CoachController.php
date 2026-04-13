@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Exports\CoachTemplateExport;
+use App\Imports\CoachImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CoachController extends Controller
 {
@@ -92,9 +96,11 @@ class CoachController extends Controller
         try {
             $user_id = null;
             if ($request->filled('username')) {
+                $email = $this->generateUniqueCoachEmail($request->username);
                 $user = User::create([
                     'name' => $request->name,
                     'username' => $request->username,
+                    'email' => $email,
                     'password' => Hash::make($request->password ?? '123123123')
                 ]);
                 $user->assignRole('Pelatih');
@@ -188,9 +194,11 @@ class CoachController extends Controller
                     }
                     $user->update($userData);
                 } else {
+                    $email = $this->generateUniqueCoachEmail($request->username);
                     $user = User::create([
                         'name' => $request->name,
                         'username' => $request->username,
+                        'email' => $email,
                         'password' => Hash::make($request->password ?? '123123123')
                     ]);
                     $user->assignRole('Pelatih');
@@ -219,5 +227,61 @@ class CoachController extends Controller
         $coach->delete(); // soft delete
 
         return response()->json(['success' => 'Data Pelatih berhasil dinonaktifkan.']);
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new CoachTemplateExport, 'template_import_pelatih.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new CoachImport, $request->file('file'));
+            return response()->json(['success' => 'Selamat! Data Pelatih berhasil diimport ke dalam sistem.']);
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errors = [];
+            foreach ($failures as $failure) {
+                // Formatting errors for better readability
+                $rowErrors = implode(', ', $failure->errors());
+                $errors[] = "Baris " . $failure->row() . " (Kolom " . $failure->attribute() . "): " . $rowErrors;
+            }
+            return response()->json([
+                'error_validation' => $errors,
+                'message' => 'Beberapa data tidak valid. Silakan periksa kembali file Excel Anda.'
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Coach Import Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Waduh! Gagal mengimport data. Terjadi kesalahan: ' . $e->getMessage()], 500);
+        }
+    }
+
+    private function generateUniqueCoachEmail(string $username): string
+    {
+        $localPart = Str::of($username)
+            ->lower()
+            ->replaceMatches('/[^a-z0-9._-]/', '')
+            ->trim('.')
+            ->value();
+
+        if ($localPart === '') {
+            $localPart = 'coach';
+        }
+
+        $domain = 'npci.local';
+        $email = "{$localPart}@{$domain}";
+        $counter = 1;
+
+        while (User::where('email', $email)->exists()) {
+            $email = "{$localPart}{$counter}@{$domain}";
+            $counter++;
+        }
+
+        return $email;
     }
 }

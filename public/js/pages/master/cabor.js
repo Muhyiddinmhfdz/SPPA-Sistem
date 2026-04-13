@@ -114,7 +114,7 @@ var KTCaborController = function () {
 
                 $('#sk_file').val('');
                 $('#sk_fileHint').show();
-                $('#sk_file_viewer').html(fetchFileLink(data.file_sk, 'SK Kepengurusan'));
+                $('#sk_file_viewer').html(fetchFileLink(data.sk_file_path, 'SK Kepengurusan'));
 
                 $('.invalid-feedback').text('');
                 $('.form-control').removeClass('is-invalid');
@@ -222,6 +222,82 @@ var KTCaborController = function () {
                             Swal.fire('Error', data.responseJSON.error || 'Terjadi kesalahan sistem', 'error');
                         }
                     });
+                }
+            });
+        });
+
+        // Import
+        $('#btnImportCabor').on('click', function () {
+            $('#importFileCabor').click();
+        });
+
+        $('#importFileCabor').on('change', function () {
+            var file = this.files[0];
+            if (!file) return;
+
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('_token', csrf_token);
+
+            Swal.fire({
+                text: "Sedang mengimport data cabor, harap tunggu...",
+                icon: "info",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: window.routes.caborImport,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    Swal.close();
+                    $('#importFileCabor').val('');
+                    table.draw();
+                    Swal.fire({
+                        title: "Sukses!",
+                        text: data.success,
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "Sip, Mantap!",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
+                },
+                error: function (data) {
+                    Swal.close();
+                    $('#importFileCabor').val('');
+                    if (data.status === 422) {
+                        var res = data.responseJSON;
+                        if (res.error_validation) {
+                            var errorHtml = '<div style="max-height: 300px; overflow-y: auto;"><ul class="text-start list-unstyled m-0">';
+                            $.each(res.error_validation, function (i, val) {
+                                errorHtml += '<li class="mb-2 d-flex align-items-start"><span class="badge badge-light-danger fw-bold me-2" style="min-width: 60px;">Gagal</span><span class="fs-7 text-gray-700">' + val + '</span></li>';
+                            });
+                            errorHtml += '</ul></div>';
+                            Swal.fire({
+                                title: "Gagal Validasi Import",
+                                html: errorHtml,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Tutup & Perbaiki",
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                        } else {
+                            Swal.fire('Error Validasi', res.message || 'File tidak valid.', 'error');
+                        }
+                    } else {
+                        var errorMessage = (data.responseJSON && data.responseJSON.error) ? data.responseJSON.error : 'Terjadi kesalahan sistem';
+                        Swal.fire('Error', errorMessage, 'error');
+                    }
                 }
             });
         });

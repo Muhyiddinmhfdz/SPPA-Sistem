@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Exports\AtletTemplateExport;
+use App\Imports\AtletImport;
 use App\Models\Atlet;
 use App\Models\Cabor;
 use App\Models\KlasifikasiDisabilitas;
@@ -12,7 +14,9 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AtletController extends Controller
 {
@@ -102,10 +106,14 @@ class AtletController extends Controller
             DB::beginTransaction();
 
             // Create User account for this athlete
+            $email = !empty($validated['email'])
+                ? trim((string) $validated['email'])
+                : $this->generateUniqueAtletEmail((string) $validated['username']);
+
             $user = User::create([
                 'name' => $validated['name'],
                 'username' => $validated['username'],
-                'email' => $validated['email'],
+                'email' => $email,
                 'password' => Hash::make($request->password ? $request->password : '123123123'),
                 'email_verified_at' => now(),
             ]);
@@ -169,9 +177,13 @@ class AtletController extends Controller
             DB::beginTransaction();
 
             $user = User::findOrFail($atlet->user_id);
+            $email = !empty($validated['email'])
+                ? trim((string) $validated['email'])
+                : ($user->email ?: $this->generateUniqueAtletEmail((string) $validated['username']));
+
             $user->name = $validated['name'];
             $user->username = $validated['username'];
-            $user->email = $validated['email'];
+            $user->email = $email;
 
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
@@ -206,6 +218,37 @@ class AtletController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error' => 'Gagal menonaktifkan data: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new AtletTemplateExport, 'template_import_atlet.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        try {
+            Excel::import(new AtletImport, $request->file('file'));
+            return response()->json(['success' => 'Selamat! Data Atlet berhasil diimport ke dalam sistem.']);
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $errors = [];
+            foreach ($e->failures() as $failure) {
+                $rowErrors = implode(', ', $failure->errors());
+                $errors[] = 'Baris ' . $failure->row() . ' (Kolom ' . $failure->attribute() . '): ' . $rowErrors;
+            }
+
+            return response()->json([
+                'error_validation' => $errors,
+                'message' => 'Beberapa data tidak valid. Silakan periksa kembali file Excel Anda.',
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Atlet Import Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Waduh! Gagal mengimport data. Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
 
@@ -244,5 +287,29 @@ class AtletController extends Controller
         }
 
         return $atlet;
+    }
+
+    private function generateUniqueAtletEmail(string $username): string
+    {
+        $localPart = Str::of($username)
+            ->lower()
+            ->replaceMatches('/[^a-z0-9._-]/', '')
+            ->trim('.')
+            ->value();
+
+        if ($localPart === '') {
+            $localPart = 'atlet';
+        }
+
+        $domain = 'npci.local';
+        $email = "{$localPart}@{$domain}";
+        $counter = 1;
+
+        while (User::where('email', $email)->exists()) {
+            $email = "{$localPart}{$counter}@{$domain}";
+            $counter++;
+        }
+
+        return $email;
     }
 }

@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MedisTemplateExport;
+use App\Imports\MedisImport;
 use App\Models\Medis;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MedisController extends Controller
 {
@@ -80,10 +85,15 @@ class MedisController extends Controller
         }
 
         // 1. Create User
+        $email = $request->filled('email')
+            ? trim((string) $request->email)
+            : $this->generateUniqueMedisEmail((string) $request->username);
+
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
-            'email' => $request->email,
+            'email' => $email,
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password ?? '123123123'),
         ]);
 
@@ -146,10 +156,14 @@ class MedisController extends Controller
 
         // 1. Update User
         if ($medis->user) {
+            $email = $request->filled('email')
+                ? trim((string) $request->email)
+                : ($medis->user->email ?: $this->generateUniqueMedisEmail((string) $request->username));
+
             $userData = [
                 'name' => $request->name,
                 'username' => $request->username,
-                'email' => $request->email,
+                'email' => $email,
             ];
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
@@ -191,5 +205,61 @@ class MedisController extends Controller
         $medis->delete(); // soft delete
 
         return response()->json(['success' => 'Data Medis berhasil dinonaktifkan.']);
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new MedisTemplateExport, 'template_import_medis.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        try {
+            Excel::import(new MedisImport, $request->file('file'));
+
+            return response()->json(['success' => 'Selamat! Data Medis berhasil diimport ke dalam sistem.']);
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $errors = [];
+            foreach ($e->failures() as $failure) {
+                $rowErrors = implode(', ', $failure->errors());
+                $errors[] = 'Baris ' . $failure->row() . ' (Kolom ' . $failure->attribute() . '): ' . $rowErrors;
+            }
+
+            return response()->json([
+                'error_validation' => $errors,
+                'message' => 'Beberapa data tidak valid. Silakan periksa kembali file Excel Anda.',
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Medis Import Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Waduh! Gagal mengimport data. Terjadi kesalahan: ' . $e->getMessage()], 500);
+        }
+    }
+
+    private function generateUniqueMedisEmail(string $username): string
+    {
+        $localPart = Str::of($username)
+            ->lower()
+            ->replaceMatches('/[^a-z0-9._-]/', '')
+            ->trim('.')
+            ->value();
+
+        if ($localPart === '') {
+            $localPart = 'medis';
+        }
+
+        $domain = 'npci.local';
+        $email = "{$localPart}@{$domain}";
+        $counter = 1;
+
+        while (User::where('email', $email)->exists()) {
+            $email = "{$localPart}{$counter}@{$domain}";
+            $counter++;
+        }
+
+        return $email;
     }
 }

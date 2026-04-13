@@ -11,35 +11,41 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $superAdmin = User::create([
-            'name' => 'Super Administrator',
-            'username' => 'superadmin',
-            'email' => 'superadmin@npci.or.id',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-        ]);
+        $superAdmin = User::updateOrCreate(
+            ['email' => 'superadmin@npci.or.id'],
+            [
+                'name' => 'Super Administrator',
+                'username' => 'superadmin',
+                'password' => Hash::make('123123123'),
+                'email_verified_at' => now(),
+                'is_active' => true,
+            ]
+        );
 
         $superAdminRole = Role::where('name', 'Super Admin')->first();
         if ($superAdminRole) {
-            $superAdmin->assignRole($superAdminRole);
+            $superAdmin->syncRoles([$superAdminRole]);
         }
 
-        $admin = User::create([
-            'name' => 'Administrator',
-            'username' => 'admin',
-            'email' => 'admin@npci.or.id',
-            'password' => Hash::make('123123123'),
-            'email_verified_at' => now(),
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@npci.or.id'],
+            [
+                'name' => 'Administrator',
+                'username' => 'admin',
+                'password' => Hash::make('123123123'),
+                'email_verified_at' => now(),
+                'is_active' => true,
+            ]
+        );
 
         $adminRole = Role::where('name', 'Admin')->first();
         if ($adminRole) {
-            $admin->assignRole($adminRole);
+            $admin->syncRoles([$adminRole]);
         }
 
-        $this->command->info('Users created successfully!');
+        $this->command->info('Users seeded successfully.');
         $this->command->info('Login credentials:');
-        $this->command->info('- Super Admin: superadmin / password');
-        $this->command->info('- Admin: admin / password');
+        $this->command->info('- Super Admin: superadmin / 123123123');
+        $this->command->info('- Admin: admin / 123123123');
     }
 }

@@ -42,6 +42,13 @@
                         </h3>
                         <div class="card-toolbar">
                             <!--begin::Action-->
+                            <a href="{{ route('master.coach.export-template') }}" class="btn btn-light-success me-3">
+                                <i class="ki-duotone ki-file-down fs-2"><span class="path1"></span><span class="path2"></span></i>Export Template
+                            </a>
+                            <button type="button" class="btn btn-light-primary me-3" id="btnImportPelatih">
+                                <i class="ki-duotone ki-file-up fs-2"><span class="path1"></span><span class="path2"></span></i>Import Pelatih
+                            </button>
+                            <input type="file" id="importFile" class="d-none" accept=".xlsx, .xls">
                             <a href="#" class="btn btn-primary" id="btnTambahPelatih" data-bs-toggle="modal" data-bs-target="#kt_modal_coach">
                                 <i class="ki-duotone ki-plus fs-2"></i>Tambah Pelatih
                             </a>
@@ -360,7 +367,8 @@
     <script>
         window.routes = {
             coachIndex: "{{ route('master.coach.index') }}",
-            coachStore: "{{ route('master.coach.store') }}"
+            coachStore: "{{ route('master.coach.store') }}",
+            coachImport: "{{ route('master.coach.import') }}"
         };
         window.baseUrl = "{{ url('/') }}";
         var csrf_token = "{{ csrf_token() }}";

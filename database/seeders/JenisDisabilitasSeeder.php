@@ -34,11 +34,16 @@ class JenisDisabilitasSeeder extends Seeder
         foreach ($jenisList as $item) {
             $klasifikasi = KlasifikasiDisabilitas::where('kode_klasifikasi', $item['klasifikasi_kode'])->first();
             if ($klasifikasi) {
-                JenisDisabilitas::create([
-                    'klasifikasi_disabilitas_id' => $klasifikasi->id,
-                    'nama_jenis' => $item['nama_jenis'],
-                    'deskripsi' => $item['deskripsi'],
-                ]);
+                JenisDisabilitas::updateOrCreate(
+                    [
+                        'klasifikasi_disabilitas_id' => $klasifikasi->id,
+                        'nama_jenis' => $item['nama_jenis'],
+                    ],
+                    [
+                        'deskripsi' => $item['deskripsi'],
+                        'is_active' => 1,
+                    ]
+                );
             }
         }
     }

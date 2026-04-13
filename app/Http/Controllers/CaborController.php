@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CaborTemplateExport;
+use App\Imports\CaborImport;
 use App\Models\Cabor;
+use App\Services\CaborCountSyncService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CaborController extends Controller
 {
+    public function __construct(private readonly CaborCountSyncService $caborCountSyncService)
+    {
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -68,7 +76,8 @@ class CaborController extends Controller
             $data['sk_file_path'] = 'uploads/cabor_sk/' . $filename;
         }
 
-        Cabor::create($data);
+        $cabor = Cabor::create($data);
+        $this->caborCountSyncService->sync($cabor->id);
 
         return response()->json(['success' => 'Cabang Olahraga berhasil ditambahkan.']);
     }
@@ -125,6 +134,7 @@ class CaborController extends Controller
         }
 
         $cabor->update($data);
+        $this->caborCountSyncService->sync($cabor->id);
 
         return response()->json(['success' => 'Cabang Olahraga berhasil diperbarui.']);
     }
@@ -140,5 +150,37 @@ class CaborController extends Controller
         $cabor->delete(); // soft delete
 
         return response()->json(['success' => 'Cabang Olahraga berhasil dinonaktifkan.']);
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new CaborTemplateExport, 'template_import_cabor.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        try {
+            Excel::import(new CaborImport, $request->file('file'));
+            $this->caborCountSyncService->syncAll();
+            return response()->json(['success' => 'Selamat! Data Cabor berhasil diimport ke dalam sistem.']);
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $errors = [];
+            foreach ($e->failures() as $failure) {
+                $rowErrors = implode(', ', $failure->errors());
+                $errors[] = "Baris " . $failure->row() . " (Kolom " . $failure->attribute() . "): " . $rowErrors;
+            }
+
+            return response()->json([
+                'error_validation' => $errors,
+                'message' => 'Beberapa data tidak valid. Silakan periksa kembali file Excel Anda.',
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Cabor Import Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Waduh! Gagal mengimport data. Terjadi kesalahan: ' . $e->getMessage()], 500);
+        }
     }
 }

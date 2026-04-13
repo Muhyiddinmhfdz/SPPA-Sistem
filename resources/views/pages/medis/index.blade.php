@@ -41,6 +41,13 @@
                             <span class="text-muted mt-1 fw-semibold fs-7">Manajemen master Dokter, Perawat & Masseur</span>
                         </h3>
                         <div class="card-toolbar">
+                            <a href="{{ route('master.medis.export-template') }}" class="btn btn-light-success me-3">
+                                <i class="ki-duotone ki-file-down fs-2"><span class="path1"></span><span class="path2"></span></i>Export Template
+                            </a>
+                            <button type="button" class="btn btn-light-primary me-3" id="btnImportMedis">
+                                <i class="ki-duotone ki-file-up fs-2"><span class="path1"></span><span class="path2"></span></i>Import Medis
+                            </button>
+                            <input type="file" id="importFileMedis" class="d-none" accept=".xlsx, .xls">
                             <a href="#" class="btn btn-primary" id="btnTambahMedis" data-bs-toggle="modal" data-bs-target="#kt_modal_medis">
                                 <i class="ki-duotone ki-plus fs-2"></i>Tambah Medis
                             </a>
@@ -292,7 +299,9 @@
         <script>
             window.routes = {
                 medisIndex: "{{ route('master.medis.index') }}",
-                medisStore: "{{ route('master.medis.store') }}"
+                medisStore: "{{ route('master.medis.store') }}",
+                medisExportTemplate: "{{ route('master.medis.export-template') }}",
+                medisImport: "{{ route('master.medis.import') }}"
             };
             window.baseUrl = "{{ url('/') }}";
             var csrf_token = "{{ csrf_token() }}";
