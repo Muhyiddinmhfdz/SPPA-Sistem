@@ -84,7 +84,7 @@ class PembinaanPrestasiController extends Controller
         $atlets = Atlet::orderBy('name', 'asc')->get();
         $cabors = Cabor::where('is_active', 1)->orderBy('name', 'asc')->get();
         return view('pages.pembinaan-prestasi.index', compact('atlets', 'cabors'))
-            ->with(['title' => 'Pembinaan Prestasi', 'breadcrum' => ['Kegiatan', 'Pembinaan Prestasi']]);
+            ->with(['title' => 'Program Latihan', 'breadcrum' => ['Kegiatan', 'Program Latihan']]);
     }
 
     /**
@@ -128,7 +128,7 @@ class PembinaanPrestasiController extends Controller
             }
 
             DB::commit();
-            return response()->json(['success' => 'Data Pembinaan Prestasi berhasil disimpan.']);
+            return response()->json(['success' => 'Data Program Latihan berhasil disimpan.']);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Gagal menyimpan data: ' . $e->getMessage()], 500);
@@ -201,7 +201,7 @@ class PembinaanPrestasiController extends Controller
             }
 
             DB::commit();
-            return response()->json(['success' => 'Data Pembinaan Prestasi berhasil diperbarui.']);
+            return response()->json(['success' => 'Data Program Latihan berhasil diperbarui.']);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Gagal memperbarui data: ' . $e->getMessage()], 500);
@@ -216,7 +216,7 @@ class PembinaanPrestasiController extends Controller
         try {
             $pembinaan = PembinaanPrestasi::findOrFail($id);
             $pembinaan->delete();
-            return response()->json(['success' => 'Data Pembinaan Prestasi berhasil dihapus.']);
+            return response()->json(['success' => 'Data Program Latihan berhasil dihapus.']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }

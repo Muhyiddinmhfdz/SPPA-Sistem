@@ -152,7 +152,7 @@
             <li class="nav-item">
                 <a class="nav-link text-active-primary d-flex align-items-center pb-5" data-bs-toggle="tab" href="#kt_dashboard_pembinaan">
                     <i class="ki-duotone ki-chart-line-star fs-2 me-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                    Statistik Pembinaan
+                    Statistik Program Latihan
                 </a>
             </li>
             <li class="nav-item">
@@ -528,7 +528,7 @@
                         </i>
                     </div>
                     <div class="fs-2hx fw-bold text-gray-900">{{ $totalPembinaan }}</div>
-                    <div class="text-muted fs-7 fw-semibold mt-1">Total Program Pembinaan</div>
+                    <div class="text-muted fs-7 fw-semibold mt-1">Total Program Latihan</div>
                     <a href="{{ route('pembinaan-prestasi.index') }}" class="stretched-link"></a>
                 </div>
             </div>
@@ -575,7 +575,7 @@
             <div class="card chart-card shadow-sm">
                 <div class="card-header border-0 pt-5">
                     <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label fw-bold fs-4 text-gray-900">Program Pembinaan Terbaru</span>
+                        <span class="card-label fw-bold fs-4 text-gray-900">Program Latihan Terbaru</span>
                         <span class="text-muted mt-1 fw-semibold fs-7">10 program terakhir yang ditambahkan</span>
                     </h3>
                 </div>
@@ -622,7 +622,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-5">Belum ada program pembinaan.</td>
+                                    <td colspan="5" class="text-center text-muted py-5">Belum ada program latihan.</td>
                                 </tr>
                                 @endforelse
                             </tbody>

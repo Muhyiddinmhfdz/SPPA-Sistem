@@ -36,7 +36,14 @@
     </script>
     <style>
         .menu .menu-item .menu-link.active {
-            color: #f1f1f4 !important;
+            color: #FFFFFF !important;
+            background-color: rgba(255, 255, 255, 0.12) !important;
+            border-color: transparent !important;
+        }
+
+        .menu .menu-item .menu-link.active .menu-icon,
+        .menu .menu-item .menu-link.active .menu-title {
+            color: #FFFFFF !important;
         }
 
         .notification-badge {
@@ -50,6 +57,75 @@
             text-align: center;
             border-radius: 50%;
         }
+
+        .sidebar-logo-link-center {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo-default-sized {
+            height: 86px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .sidebar-logo-minimize-sized {
+            height: 32px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .scroll-y {
+            scrollbar-color: #ffffff rgba(255, 255, 255, 0.15);
+            scrollbar-width: thin;
+        }
+
+        .scroll-y::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scroll-y::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+        }
+
+        .scroll-y::-webkit-scrollbar-thumb {
+            background: #ffffff;
+            border-radius: 8px;
+        }
+
+        #kt_app_sidebar_menu_scroll {
+            --bs-scrollbar-color: #ffffff;
+            --bs-scrollbar-hover-color: #ffffff;
+            scrollbar-color: #ffffff transparent !important;
+        }
+
+        #kt_app_sidebar_menu_scroll::-webkit-scrollbar-thumb,
+        #kt_app_sidebar_menu_scroll:hover::-webkit-scrollbar-thumb {
+            background-color: #ffffff !important;
+        }
+
+        #kt_app_sidebar_menu_scroll.hover-scroll-y,
+        #kt_app_sidebar_menu_scroll.hover-scroll-overlay-y,
+        #kt_app_sidebar_menu_scroll.hover-scroll-y:hover,
+        #kt_app_sidebar_menu_scroll.hover-scroll-overlay-y:hover {
+            scrollbar-color: #ffffff transparent !important;
+        }
+
+        #kt_app_sidebar_menu_scroll.hover-scroll-y::-webkit-scrollbar-thumb,
+        #kt_app_sidebar_menu_scroll.hover-scroll-overlay-y::-webkit-scrollbar-thumb,
+        #kt_app_sidebar_menu_scroll.hover-scroll-y:hover::-webkit-scrollbar-thumb,
+        #kt_app_sidebar_menu_scroll.hover-scroll-overlay-y:hover::-webkit-scrollbar-thumb {
+            background-color: #ffffff !important;
+        }
+
     </style>
 </head>
 <!--end::Head-->
@@ -79,7 +155,7 @@
 
                     <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
                         <a href="{{ route('dashboard') }}" class="d-lg-none">
-                            <img alt="Logo" src="{{ asset('assets/media/logos/default.svg') }}" class="h-25px" />
+                            <img alt="Logo" src="{{ asset('assets/paralympic4.png') }}" class="h-30px" />
                         </a>
                     </div>
 
@@ -129,9 +205,9 @@
                 <!--begin::Sidebar-->
                 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
                     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
-                        <a href="{{ route('dashboard') }}">
-                            <img alt="Logo" src="{{ asset('assets/logos_sistem.png') }}" class="h-45px w-200px app-sidebar-logo-default" style="filter: brightness(0) invert(1);" />
-                            <img alt="Logo" src="{{ asset('assets/logos_sistem.png') }}" class="h-20px app-sidebar-logo-minimize" style="filter: brightness(0) invert(1);" />
+                        <a href="{{ route('dashboard') }}" class="sidebar-logo-link-center">
+                            <img alt="Logo" src="{{ asset('assets/paralympic4.png') }}" class="app-sidebar-logo-default sidebar-logo-default-sized" />
+                            <img alt="Logo" src="{{ asset('assets/paralympic4.png') }}" class="app-sidebar-logo-minimize sidebar-logo-minimize-sized" />
                         </a>
                         <div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize">
                             <i class="ki-duotone ki-black-left-line fs-3 rotate-180">
@@ -296,7 +372,7 @@
                                     </div>
 
                                     <div class="menu-item pt-5">
-                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Program Pembinaan</span></div>
+                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Program Latihan</span></div>
                                     </div>
 
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('master.training-type.*') || request()->routeIs('pembinaan-prestasi.*') ? 'here show' : '' }}">
@@ -304,7 +380,7 @@
                                             <span class="menu-icon">
                                                 <i class="ki-duotone ki-chart-line-star fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
                                             </span>
-                                            <span class="menu-title">Pembinaan Prestasi</span>
+                                            <span class="menu-title">Program Latihan</span>
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <div class="menu-sub menu-sub-accordion {{ request()->routeIs('master.training-type.*') || request()->routeIs('pembinaan-prestasi.*') ? 'show' : '' }}">
@@ -360,17 +436,6 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="menu-item pt-5">
-                                        <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Pengaturan</span></div>
-                                    </div>
-
-                                    <div class="menu-item">
-                                        <a href="#" class="menu-link">
-                                            <span class="menu-icon"><i class="ki-duotone ki-setting-2 fs-2"><span class="path1"></span><span class="path2"></span></i></span>
-                                            <span class="menu-title">Pengaturan Sistem</span>
-                                        </a>
                                     </div>
 
                                 </div>

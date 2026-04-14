@@ -241,7 +241,7 @@ var KTPembinaanPrestasi = function () {
                 type: 'GET',
                 success: function (res) {
                     var m = res.pembinaan;
-                    $('#modalTitle').text('Edit Program Pembinaan');
+                    $('#modalTitle').text('Edit Program Latihan');
                     $('#pembinaan_id').val(m.id);
 
                     // Set basic fields
@@ -300,7 +300,7 @@ var KTPembinaanPrestasi = function () {
         $('#kt_modal_pembinaan').on('hidden.bs.modal', function () {
             $('#formPembinaan')[0].reset();
             $('#pembinaan_id').val('');
-            $('#modalTitle').text('Tambah Program Pembinaan');
+            $('#modalTitle').text('Tambah Program Latihan');
             $('#atlet_id').val('').trigger('change.select2');
 
             $('#display_cabor, #display_jenis_disabilitas, #display_klasifikasi').val('');

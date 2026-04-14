@@ -8,7 +8,7 @@
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
                     <span class="card-label fw-bold fs-4 text-gray-900">Filter Pencarian</span>
-                    <span class="text-muted mt-1 fw-semibold fs-7">Saring data program pembinaan berdasarkan kriteria</span>
+                    <span class="text-muted mt-1 fw-semibold fs-7">Saring data program latihan berdasarkan kriteria</span>
                 </h3>
             </div>
             <div class="card-body pb-10 pt-0">
@@ -53,8 +53,8 @@
         <div class="card card-xl-stretch mb-5 mb-xl-8 border-0 shadow-sm" style="border-radius: 12px;">
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label fw-bold fs-3 text-gray-900">Pembinaan Prestasi</span>
-                    <span class="text-muted mt-1 fw-semibold fs-7">Manajemen Program Pembinaan Prestasi Atlet NPCI</span>
+                    <span class="card-label fw-bold fs-3 text-gray-900">Program Latihan</span>
+                    <span class="text-muted mt-1 fw-semibold fs-7">Manajemen Program Latihan Atlet NPCI</span>
                 </h3>
                 <div class="card-toolbar">
                     <a href="#" class="btn btn-primary" id="btnTambahPembinaan" data-bs-toggle="modal" data-bs-target="#kt_modal_pembinaan">

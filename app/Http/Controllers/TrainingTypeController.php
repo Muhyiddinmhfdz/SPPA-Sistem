@@ -40,7 +40,7 @@ class TrainingTypeController extends Controller
 
         $cabors = Cabor::where('is_active', 1)->orderBy('name')->get();
         return view('pages.training_type.index', compact('cabors'))
-            ->with(['title' => 'Master Jenis Latihan', 'breadcrum' => ['Program Pembinaan Prestasi', 'Jenis Latihan']]);
+            ->with(['title' => 'Master Jenis Latihan', 'breadcrum' => ['Program Latihan', 'Jenis Latihan']]);
     }
 
     public function store(Request $request)

@@ -1,9 +1,9 @@
-<!--begin::Modal - Add/Edit Pembinaan Prestasi-->
+<!--begin::Modal - Add/Edit Program Latihan-->
 <div class="modal fade" id="kt_modal_pembinaan" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header" id="kt_modal_pembinaan_header">
-                <h2 class="fw-bold" id="modalTitle">Tambah Program Pembinaan</h2>
+                <h2 class="fw-bold" id="modalTitle">Tambah Program Latihan</h2>
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                     <i class="ki-duotone ki-cross fs-1">
                         <span class="path1"></span>
