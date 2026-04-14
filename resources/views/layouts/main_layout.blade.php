@@ -18,7 +18,8 @@
     <meta property="og:url" content="{{ url('/') }}" />
     <meta property="og:site_name" content="SPPA" />
     <link rel="canonical" href="SPPA" />
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <link rel="icon" type="image/png" href="{{ asset('assets/paralympic4.png') }}?v={{ filemtime(public_path('assets/paralympic4.png')) }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/paralympic4.png') }}?v={{ filemtime(public_path('assets/paralympic4.png')) }}" />
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <!--end::Fonts-->
@@ -126,6 +127,111 @@
             background-color: #ffffff !important;
         }
 
+        .user-menu-dropdown {
+            width: 320px;
+            padding: 0;
+            overflow: hidden;
+            border: 1px solid #dbe7f5;
+            border-radius: 16px;
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+            background: #ffffff;
+        }
+
+        .user-menu-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #1d4ed8 100%);
+        }
+
+        .user-menu-avatar-badge {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .user-menu-top-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 4px;
+        }
+
+        .user-menu-name {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #ffffff;
+            margin-bottom: 3px;
+        }
+
+        .user-menu-email {
+            display: block;
+            font-size: 13px;
+            line-height: 1.3;
+            color: rgba(255, 255, 255, 0.92);
+            word-break: break-word;
+        }
+
+        .user-menu-body {
+            padding: 12px 14px 14px;
+            background: #ffffff;
+        }
+
+        .user-menu-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            background: #f1f5f9;
+            border-radius: 999px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-menu-meta-chip-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .user-menu-logout-btn {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid #fecdd3;
+            border-radius: 11px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e11d48;
+            background: #fff1f2;
+            transition: all .2s ease;
+        }
+
+        .user-menu-logout-btn:hover {
+            color: #ffffff;
+            background: #e11d48;
+            border-color: #e11d48;
+        }
+
     </style>
 </head>
 <!--end::Head-->
@@ -170,24 +276,30 @@
                                 <div class="cursor-pointer symbol symbol-35px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                                     <img src="{{ asset('assets/media/avatars/blank.png') }}" class="rounded-3" alt="user" />
                                 </div>
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
-                                    <div class="menu-item px-3">
-                                        <div class="menu-content d-flex align-items-center px-3">
-                                            <div class="symbol symbol-50px me-5">
-                                                <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="user" />
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <div class="fw-bold d-flex align-items-center fs-5">{{ Auth::user()->name }}</div>
-                                                <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ Auth::user()->email }}</a>
-                                            </div>
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6 user-menu-dropdown" data-kt-menu="true">
+                                    <div class="user-menu-top">
+                                        <div class="user-menu-avatar-badge">
+                                            {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <div class="user-menu-top-label">Akun Aktif</div>
+                                            <div class="user-menu-name">{{ Auth::user()->name }}</div>
+                                            <span class="user-menu-email">{{ Auth::user()->email }}</span>
                                         </div>
                                     </div>
-                                    <div class="separator my-2"></div>
-                                    <div class="menu-item px-5">
+                                    <div class="user-menu-body">
+                                        <div class="user-menu-meta-chip">
+                                            <span class="user-menu-meta-chip-dot"></span>
+                                            Sesi login aktif
+                                        </div>
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-link menu-link px-5 w-100 text-start">
-                                                Keluar
+                                            <button type="submit" class="user-menu-logout-btn">
+                                                <i class="ki-duotone ki-exit-right fs-4">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                                Keluar dari akun
                                             </button>
                                         </form>
                                     </div>
@@ -350,7 +462,7 @@
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('monitoring-latihan.*') || request()->routeIs('riwayat-latihan.*') ? 'here show' : '' }}">
                                         <span class="menu-link">
                                             <span class="menu-icon">
-                                                <i class="ki-duotone ki-barbell fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span></i>
+                                                <i class="ki-duotone ki-clipboard fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
                                             </span>
                                             <span class="menu-title">Monitoring Latihan</span>
                                             <span class="menu-arrow"></span>

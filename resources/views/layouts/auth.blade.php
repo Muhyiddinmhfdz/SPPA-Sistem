@@ -5,7 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? 'Login' }} - SPPA Sistem</title>
-    <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/paralympic4.png') }}?v={{ filemtime(public_path('assets/paralympic4.png')) }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/paralympic4.png') }}?v={{ filemtime(public_path('assets/paralympic4.png')) }}">
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
